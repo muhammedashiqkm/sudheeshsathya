@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Sudeesh Sathya - Blog{% endblock %}
+
+{% block content %}
+<section class="blog-list-section">
+    <div class="container">
+        <h1 class="page-title">Blog</h1>
+        
+        <div class="blog-categories-container">
+            <h2>Categories</h2>
+            <div class="blog-categories-grid">
+                {% for category in categories %}
+                <div class="blog-category-box">
+                    <div class="category-image-container">
+                        {% if category.image %}
+                        <img src="{{ category.image.url }}" alt="{{ category.name }}" class="category-image">
+                        {% endif %}
+                    </div>
+                    <div class="category-content">
+                        <h3>{{ category.name }}</h3>
+                        <p>{{ category.description }}</p>
+                        <a href="{% url 'blog_category' category.slug %}" class="btn secondary-btn">View Posts</a>
+                    </div>
+                </div>
+                {% empty %}
+                <p>No categories available yet.</p>
+                {% endfor %}
+            </div>
+        </div>
+        
+        <div class="recent-posts">
+            <h2>Recent Posts</h2>
+            <div class="blog-posts-grid">
+                {% for post in recent_posts %}
+                <div class="blog-post-card">
+                    <div class="post-image">
+                        {% if post.image %}
+                        <img src="{{ post.image.url }}" alt="{{ post.title }}">
+                        {% else %}
+                        <img src="{% static 'images/blog-placeholder.jpg' %}" alt="{{ post.title }}">
+                        {% endif %}
+                    </div>
+                    <div class="post-content">
+                        <div class="post-category">{{ post.category.name }}</div>
+                        <h3 class="post-title">{{ post.title }}</h3>
+                        <div class="post-meta">
+                            <span class="post-date">{{ post.created_at|date:"F j, Y" }}</span>
+                        </div>
+                        <p class="post-excerpt">{{ post.excerpt }}</p>
+                        <a href="{% url 'blog_detail' post.slug %}" class="read-more">Read More</a>
+                    </div>
+                </div>
+                {% empty %}
+                <p>No posts available yet.</p>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

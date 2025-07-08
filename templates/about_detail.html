@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}{{ about_page.title }} - About{% endblock %}
+
+{% block content %}
+<section class="about-detail-section">
+    <div class="container">
+        <div class="about-header-1">
+            <p class="section-label">ABOUT ME</p>
+            <h1 class="main-title">{{ about_page.title }}</h1>
+            <p class="subtitle">{{ about_page.subtitle }}</p>
+        </div>
+
+        <div class="about-content-wrapper">
+            <div class="about-image-box">
+                {% if about_page.profile_image %}
+                    <img src="{{ about_page.profile_image.url }}" alt="{{ about_page.title }}" class="about-profile-image">
+                {% else %}
+                    <img src="{% static 'images/profile-placeholder.jpg' %}" alt="{{ about_page.title }}" class="about-profile-image">
+                {% endif %}
+
+                <div class="social-icons">
+                    <a href="https://www.instagram.com/sudheesh_sathya?igsh=MWlpaDI1Nm55djluNA==" target="_blank"><i class="fab fa-instagram"></i></a>
+                    <a href="https://x.com/Sudheeshsathya8" target="_blank"><i class="fab fa-twitter"></i></a>
+                    <a href="https://www.youtube.com/@sudheeshsathya888" target="_blank"><i class="fab fa-youtube"></i></a>
+                    <a href="https://www.linkedin.com/in/sudheeshsathya/" target="_blank"><i class="fab fa-linkedin"></i></a>
+                </div>
+            </div>
+
+            <div class="about-text-box">
+                <h2 class="greeting-heading">Hey, I'm Sudheesh Sathya.</h2>
+                <div class="about-description">
+                    {{ about_page.content|linebreaks }}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Optional JavaScript here
+</script>
+{% endblock %}

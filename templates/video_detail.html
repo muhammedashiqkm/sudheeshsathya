@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}{{ video.title }}{% endblock %}
+
+{% block content %}
+<section class="blog-detail-section video-detail-page">
+    <div class="container">
+        <div class="video-player-wrapper">
+            <iframe src="{{ video.get_embed_url }}"
+                    frameborder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowfullscreen></iframe>
+        </div>
+
+        <div class="video-content-area">
+            <h1 class="video-main-title">{{ video.title }}</h1>
+            <div class="video-meta">
+                {% if video.category %}<span>Category: {{ video.category.name }}</span>{% endif %}
+                <span>Published on: {{ video.published_date|date:"F d, Y" }}</span>
+            </div>
+            <div class="video-description">
+                {{ video.description|linebreaks }}
+            </div>
+        </div>
+
+        <div class="back-to-videos">
+            <a href="{% url 'video_list' %}" class="btn secondary-btn"><i class="fas fa-arrow-left"></i> Back to All Videos</a>
+        </div>
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,65 @@
+{% extends "admin/base_admin.html" %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block admin_content %}
+<div class="content-header">
+    <h2>{{ title }}</h2>
+    <a href="{% url 'admin_videos' %}" class="btn btn-outline">
+        <i class="fas fa-arrow-left"></i> Back to Videos
+    </a>
+</div>
+
+<div class="form-container">
+    <form method="post" enctype="multipart/form-data" class="admin-form">
+        {% csrf_token %}
+        
+        <div class="form-group">
+            <label for="{{ form.title.id_for_label }}">Title</label>
+            {{ form.title }}
+        </div>
+
+        <div class="form-group">
+            <label for="{{ form.slug.id_for_label }}">Slug</label>
+            {{ form.slug }}
+            <small class="form-text text-muted">A unique URL-friendly identifier. Leave blank to auto-generate from title.</small>
+        </div>
+
+        <div class="form-group">
+            <label for="{{ form.description.id_for_label }}">Description</label>
+            {{ form.description }}
+        </div>
+
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <label for="{{ form.video_url.id_for_label }}">Video URL</label>
+                {{ form.video_url }}
+            </div>
+            <div class="form-group col-md-6">
+                <label for="{{ form.category.id_for_label }}">Category</label>
+                {{ form.category }}
+            </div>
+        </div>
+        
+        <div class="form-group">
+            <label for="{{ form.thumbnail.id_for_label }}">Thumbnail Image</label>
+            {{ form.thumbnail }}
+            {% if form.instance and form.instance.thumbnail %}
+            <div class="current-image">Current: <a href="{{ form.instance.thumbnail.url }}" target="_blank">{{ form.instance.thumbnail.name }}</a></div>
+            {% endif %}
+        </div>
+        
+        <div class="form-group">
+            <label class="checkbox-label">
+                {{ form.is_featured }}
+                Feature this video
+            </label>
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary">Save Video</button>
+            <a href="{% url 'admin_videos' %}" class="btn btn-outline">Cancel</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

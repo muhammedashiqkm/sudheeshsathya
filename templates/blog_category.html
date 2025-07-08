@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}{{ category.name }} - Sudeesh Sathya{% endblock %}
+
+{% block content %}
+<section class="blog-list-section">
+    <div class="container">
+        <h1 class="page-title">{{ category.name }}</h1>
+        <p class="section-description">{{ category.description }}</p>
+        
+        <div class="blog-posts-grid">
+            {% for post in posts %}
+            <div class="blog-post-card">
+                <div class="post-image">
+                    {% if post.image %}
+                    <img src="{{ post.image.url }}" alt="{{ post.title }}">
+                    {% else %}
+                    <img src="{% static 'images/blog-placeholder.jpg' %}" alt="{{ post.title }}">
+                    {% endif %}
+                </div>
+                <div class="post-content">
+                    <div class="post-category">{{ post.category.name }}</div>
+                    <h3 class="post-title">{{ post.title }}</h3>
+                    <div class="post-meta">
+                        <span class="post-date">{{ post.created_at|date:"F j, Y" }}</span>
+                    </div>
+                    <p class="post-excerpt">{{ post.excerpt }}</p>
+                    <a href="{% url 'blog_detail' post.slug %}" class="read-more">Read More</a>
+                </div>
+            </div>
+            {% empty %}
+            <div class="no-posts">
+                <p>No posts available in this category yet.</p>
+            </div>
+            {% endfor %}
+        </div>
+        
+        <div class="back-to-blog">
+            <a href="{% url 'blog_list' %}" class="btn secondary-btn">Back to All Categories</a>
+        </div>
+    </div>
+</section>
+{% endblock %}

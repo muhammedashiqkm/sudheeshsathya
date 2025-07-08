@@ -1,0 +1,231 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Sudeesh Sathya - Portfolio{% endblock %}
+
+{% block content %}
+<section id="home" class="home-section">
+    <div class="overlay"></div>
+    <div class="home-content">
+        <h1>Sudheesh Sathya</h1>
+        <p class="tagline">INVESTMENT ANALYST | CREATOR | INNOVATOR</p>
+        <div class="cta-buttons">
+            <a href="#about" class="btn primary-btn">Learn More</a>
+            <a href="#contact" class="btn secondary-btn">Get in Touch</a>
+        </div>
+    </div>
+
+    <div class="scroll-down">
+        <span class="arrow arrow1"></span>
+        <span class="arrow arrow2"></span>
+      </div>
+
+
+</section>
+
+<section id="about" class="section about-section">
+    <div class="container">
+        <div class="section-box about-box">
+            <div class="about-content">
+                <div class="about-text-container">
+                    <div class="about-header">
+                        <h3 class="about-name">About Me</h3>
+                    </div>
+                    <div class="about-divider"></div>
+                    <div class="about-text">
+                        <p>Hello! I'm Sudeesh Sathya, a passionate developer with expertise in web development and software engineering. I love creating elegant solutions to complex problems and continuously learning new technologies.</p>
+                        <p>With a background in computer science and years of experience in the industry, I've worked on a variety of projects ranging from web applications to mobile apps and more.</p>
+                    </div>
+                    <div class="blog-cta">
+                        <a href="{% url 'about_detail' %}" class="btn primary-btn">Explore Now</a>
+                    </div>
+                </div>
+                <div class="about-image-container">
+                    <img src="{% static 'images/run.jpg' %}" alt="Sudeesh Sathya" class="profile-image clickable-image" data-modal-image="{% static 'images/hero-bg.jpg' %}" data-modal-title="Sudeesh Sathya">
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="blog" class="section blog-section">
+    <div class="container">
+        <div class="section-box blog-box">
+            <div class="blog-content">
+                <div class="blog-text-container">
+                    <div class="blog-header">
+                        <h3 class="blog-name">Blog</h3>
+                    </div>
+                    <div class="blog-divider"></div>
+                    <div class="blog-text">
+                        <p>Welcome to my blog where I share insights, tutorials, and thoughts on web development, technology trends, and my personal projects.</p>
+                        <p>I regularly write about the latest technologies, best practices, and lessons learned from my experiences as a developer. Join me on this journey of continuous learning and exploration.</p>
+                    </div>
+                    <div class="blog-cta">
+                        <a href="{% url 'blog_list' %}" class="btn primary-btn">Explore Now</a>
+                    </div>
+                </div>
+                <div class="blog-image-container">
+                    <img src="{% static 'images/blog1.jpeg' %}" alt="Blog" class="blog-image clickable-image" data-modal-image="{% static 'images/tech-blog.jpg' %}" data-modal-title="My Blog">
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="videos" class="section videos-section">
+    <div class="container">
+        <div class="section-box video-box">
+            <div class="video-content">
+                <div class="video-text-container">
+                    <div class="video-header">
+                        <h3 class="video-name">Videos</h3>
+                    </div>
+                    <div class="video-divider"></div>
+                    <div class="video-text">
+                        <p>I'm working on creating video content to share my knowledge and experiences in web development and technology.</p>
+                        <p>Stay tuned for tutorials, code reviews, and tech discussions that will help you enhance your skills and stay updated with the latest trends.</p>
+                    </div>
+                    <div class="blog-cta">
+                        <a href="{% url 'video_list' %}" class="btn primary-btn">Explore Now</a>
+                    </div>
+                </div>
+                <div class="video-image-container">
+                    <img src="{% static 'images/1c.jpg' %}" alt="Videos" class="video-image clickable-image" data-modal-image="{% static 'images/video-placeholder.jpg' %}" data-modal-title="Video Content Coming Soon">
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="break-line">
+    <div class="white-line">
+</div>
+ </div>
+
+
+<section id="contact" class="section contact-section">
+    <div class="container">
+
+            <div class="get-in-touch-content">
+                <h2 class="get-in-touch-heading">Get in Touch</h2>
+
+                <div class="social-media-icons">
+                    <a href="https://www.linkedin.com/in/sudheeshsathya/" class="social-icon" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
+                    <a href="https://www.instagram.com/sudheesh_sathya?igsh=MWlpaDI1Nm55djluNA==" class="social-icon" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                    <a href="https://x.com/Sudheeshsathya8" class="social-icon" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                    <a href="https://www.youtube.com/@sudheeshsathya888" class="social-icon" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+                </div>
+
+                <div class="message-box">
+                    <div class="progress-container">
+                        <div class="progress-bar" id="form-progress-bar"></div>
+                    </div>
+
+                    <div class="message-box-header">
+                        <span class="sender-name">Sudheesh Sathya</span>
+                    </div>
+
+                    <div class="message-form-container">
+                        <div class="message-step active" id="step-intro">
+                            <div class="message-question">
+                                <h3>Want to send me a message?</h3>
+                                <p>Let us know how we can work together</p>
+                            </div>
+                            <div class="message-action">
+                                <button class="btn primary-btn" id="btn-start">Start</button>
+                                <span class="key-hint">press enter</span>
+                            </div>
+                        </div>
+
+                        <div class="message-step" id="step-name">
+                            <div class="message-question">
+                                <h3>What is your name?</h3>
+                            </div>
+                            <div class="message-action">
+                                <input type="text" id="input-name" class="form-input" placeholder="Type your name here">
+                                <button class="btn primary-btn" id="btn-name-next">OK</button>
+                                <span class="key-hint">press enter</span>
+                            </div>
+                        </div>
+
+                        <div class="message-step" id="step-email">
+                            <div class="message-question">
+                                <h3>What is your email address?</h3>
+                            </div>
+                            <div class="message-action">
+                                <input type="email" id="input-email" class="form-input" placeholder="Type your email here">
+                                <button class="btn primary-btn" id="btn-email-next">OK</button>
+                                <span class="key-hint">press enter</span>
+                            </div>
+                        </div>
+
+                        <div class="message-step" id="step-message">
+                            <div class="message-question">
+                                <h3>What is your message?</h3>
+                            </div>
+                            <div class="message-action">
+                                <textarea id="input-message" class="form-input" rows="4" placeholder="Type your message here"></textarea>
+                                <span class="textarea-hint">Shift ⇧ + Enter ↵ to make a line break</span>
+                                <button class="btn primary-btn" id="btn-submit">Submit</button>
+                            </div>
+                        </div>
+
+                        <div class="message-step" id="step-thanks">
+                            <div class="message-question">
+                                <h3>Thank you!</h3>
+                                <p>Your message has been sent successfully.</p>
+                            </div>
+                        </div>
+
+                        <div class="form-navigation">
+                            <button class="nav-btn" id="nav-up" aria-label="Previous field">
+                                <i class="fas fa-chevron-up"></i>
+                            </button>
+                            <button class="nav-btn" id="nav-down" aria-label="Next field">
+                                <i class="fas fa-chevron-down"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <form id="contact-form" action="{% url 'contact' %}" method="post" style="display: none;">
+                        {% csrf_token %}
+                        <input type="text" id="form-name" name="name" required>
+                        <input type="email" id="form-email" name="email" required>
+                        <textarea id="form-message" name="message" required></textarea>
+                        <button type="submit" style="display: none;">Submit</button>
+                    </form>
+                </div>
+            </div>
+    </div>
+</section>
+
+
+
+
+<section class="footer-subscribe-section">
+    <h2>Epiphanies - Sudheesh Sathya</h2>
+    <p>
+        Bite-sized insights and perspective for those who think differently<br>
+        Every saturday evening
+
+    </p>
+    <form id="footer-subscribe-form" method="post">
+        {% csrf_token %}
+        <div class="subscribe-input-group">
+            <input type="email" name="email" placeholder="Your email address" required />
+            <button type="submit">Subscribe</button>
+        </div>
+        <div id="footer-subscribe-message" class="subscribe-message"></div>
+    </form>
+</section>
+
+
+
+
+{% endblock %}
+
+
+{% block extra_js %}
+<script src="{% static 'js/contact-form.js' %}"></script>
+{% endblock %}
