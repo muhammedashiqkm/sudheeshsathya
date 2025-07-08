@@ -413,7 +413,7 @@ header.hidden {
     transform: scale(1.03);
 }
 
-/*scroll down arrow*/
+/scroll down arrow/
 .scroll-down {
     position: absolute;
     bottom: 30px;
@@ -858,21 +858,27 @@ h1.main-title {
 .blog-categories-container h2 {
     font-size: 2rem;
     margin-bottom: 30px;
+    text-align: center;
 }
 
 .blog-categories-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    grid-template-columns: repeat(auto-fit, 250px);
     gap: 2rem;
     margin-top: 2rem;
+    justify-content: center;
 }
 
 .blog-category-box {
-    background: var(--dark-bg-lighter);
+     background: var(--dark-bg-lighter);
     border-radius: var(--border-radius);
+    border: 1px solid rgba(255, 255, 255, 0.2);
     padding: 1.5rem;
     transition: var(--transition);
     overflow: hidden;
+    max-width: 400px; /* Add maximum width constraint */
+    width: 100%; /* Ensure it takes available space up to max-width */
+    
 }
 
 .blog-category-box:hover {
@@ -925,7 +931,7 @@ h1.main-title {
 .blog-posts-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 30px;
+    gap: 50px;
 }
 
 .blog-post-card {
@@ -933,6 +939,7 @@ h1.main-title {
     border-radius: var(--border-radius);
     overflow: hidden;
     transition: var(--transition);
+    width: 320px; 
 }
 
 .blog-post-card:hover {
