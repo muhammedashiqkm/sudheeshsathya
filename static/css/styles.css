@@ -413,7 +413,7 @@ header.hidden {
     transform: scale(1.03);
 }
 
-/scroll down arrow/
+/* scroll down arrow */
 .scroll-down {
     position: absolute;
     bottom: 30px;
@@ -931,7 +931,8 @@ h1.main-title {
 .blog-posts-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 50px;
+     gap: 50px;
+    justify-items: start;
 }
 
 .blog-post-card {
