@@ -160,11 +160,12 @@ header.hidden {
 }
 
 .logo-text {
-    font-size: 1.4rem;
-    font-weight: 700;
-    letter-spacing: 1px;
     display: inline-block;
     transition: var(--transition);
+    letter-spacing: 4px;
+    font-family: Playfair Display, sans-serif;
+    font-size: 1rem;
+    font-weight: 600;
 }
 
 .logo a:hover .logo-text {
@@ -208,6 +209,7 @@ header.hidden {
     display: inline-block;
     padding: 5px 0;
     transition: transform 0.3s ease, color 0.3s ease;
+    font-size: 0.8rem;
 }
 
 .nav-links a::after {
@@ -304,10 +306,15 @@ header.hidden {
 }
 
 .home-content h1 {
-    font-size: 4rem;
     margin-bottom: 20px;
     animation: fadeInDown 1s ease;
     font-family: 'Auto';
+    color: #ebebeb;
+    letter-spacing: 12px;
+    mix-blend-mode: normal;
+    font-family: Playfair Display, sans-serif;
+    font-size: 8vh;
+    font-weight: bold;
 }
 
 .tagline {
@@ -385,12 +392,16 @@ header.hidden {
 
 /* MODIFIED - New Section Box Style for Glassy Look */
 .section-box {
-    background: rgba(30, 30, 30, 0.65); /* Semi-transparent dark background */
-    -webkit-backdrop-filter: blur(12px); /* Backdrop blur for glass effect */
+    background: rgba(30, 30, 30, 0.65);
+    /* Semi-transparent dark background */
+    -webkit-backdrop-filter: blur(12px);
+    /* Backdrop blur for glass effect */
     backdrop-filter: blur(12px);
     border-radius: 30px;
-    border: 1px solid rgba(255, 255, 255, 0.1); /* Subtle border */
-    overflow: visible; /* Changed from hidden to allow tilted image to look right */
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    /* Subtle border */
+    overflow: visible;
+    /* Changed from hidden to allow tilted image to look right */
     position: relative;
     width: 100%;
     padding: 55px 50px;
@@ -477,8 +488,10 @@ header.hidden {
     display: none;
     position: fixed;
     z-index: 9999;
-    left: 0; top: 0;
-    width: 100%; height: 100%;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
     background-color: rgba(0, 0, 0, 0.6);
     justify-content: center;
     align-items: center;
@@ -505,7 +518,7 @@ header.hidden {
 }
 
 .subscription-modal .modal-content h3 {
-    color:rgb(241, 236, 236);
+    color: rgb(241, 236, 236);
 }
 
 .subscription-modal .modal-content p {
@@ -516,7 +529,7 @@ header.hidden {
 /* FOOTER SUBSCRIBE SECTION */
 .footer-subscribe-section {
     padding: 3rem 1rem;
-    background-color:#787f873b;
+    background-color: #787f873b;
     text-align: center;
 }
 
@@ -528,7 +541,7 @@ header.hidden {
 
 .footer-subscribe-section p {
     font-size: 1rem;
-    color:#c9c9c9;
+    color: #c9c9c9;
     margin-bottom: 1.2rem;
 }
 
@@ -550,11 +563,13 @@ header.hidden {
     font-family: 'Poppins', sans-serif;
     transition: all 0.3s ease;
 }
+
 .subscribe-input-group input:focus {
     border-color: var(--primary-color);
     outline: none;
     box-shadow: 0 0 0 3px rgba(108, 99, 255, 0.2);
 }
+
 .subscribe-input-group button {
     padding: 12px 25px;
     background-color: var(--primary-color);
@@ -600,12 +615,18 @@ header.hidden {
 }
 
 @keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
 }
 
 #about {
-    margin-top: 5rem; /* Adjust this value to increase or decrease the space */
+    margin-top: 5rem;
+    /* Adjust this value to increase or decrease the space */
 }
 
 /* MODIFIED - Combined and Updated Grid Layouts */
@@ -613,7 +634,8 @@ header.hidden {
 .blog-content,
 .video-content {
     display: grid;
-    grid-template-columns: 2fr 1.2fr; /* Give more space to text */
+    grid-template-columns: 2fr 1.2fr;
+    /* Give more space to text */
     gap: 70px;
     align-items: center;
     position: relative;
@@ -624,7 +646,8 @@ header.hidden {
 .blog-image-container,
 .video-image-container {
     position: relative;
-    transform: rotate(3.5deg); /* Tilt the image */
+    transform: rotate(3.5deg);
+    /* Tilt the image */
     transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
     display: flex;
     align-items: center;
@@ -642,7 +665,8 @@ header.hidden {
 .profile-image,
 .blog-image,
 .video-image {
-    border-radius: 20px; /* Rounded corners for the image */
+    border-radius: 20px;
+    /* Rounded corners for the image */
     width: 100%;
     height: 350px;
     object-fit: cover;
@@ -657,7 +681,7 @@ header.hidden {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    
+
 }
 
 .about-header,
@@ -709,7 +733,7 @@ header.hidden {
 .blog-cta {
     display: flex;
     gap: 15px;
-    margin-top:1.5rem;
+    margin-top: 1.5rem;
 }
 
 
@@ -870,15 +894,17 @@ h1.main-title {
 }
 
 .blog-category-box {
-     background: var(--dark-bg-lighter);
+    background: var(--dark-bg-lighter);
     border-radius: var(--border-radius);
     border: 1px solid rgba(255, 255, 255, 0.2);
     padding: 1.5rem;
     transition: var(--transition);
     overflow: hidden;
-    max-width: 400px; /* Add maximum width constraint */
-    width: 100%; /* Ensure it takes available space up to max-width */
-    
+    max-width: 400px;
+    /* Add maximum width constraint */
+    width: 100%;
+    /* Ensure it takes available space up to max-width */
+
 }
 
 .blog-category-box:hover {
@@ -931,7 +957,7 @@ h1.main-title {
 .blog-posts-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-     gap: 50px;
+    gap: 50px;
     justify-items: start;
 }
 
@@ -940,7 +966,7 @@ h1.main-title {
     border-radius: var(--border-radius);
     overflow: hidden;
     transition: var(--transition);
-    width: 320px; 
+    width: 320px;
 }
 
 .blog-post-card:hover {
@@ -1253,13 +1279,14 @@ h1.main-title {
 
     /* 🔽 Optional glassy blur effect */
     backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px); /* For Safari */
+    -webkit-backdrop-filter: blur(8px);
+    /* For Safari */
 }
 
 
 .video-card:hover {
     transform: translateY(-8px);
-    box-shadow: 0 10px 20px rgba(0,0,0,0.4);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
 }
 
 .video-thumbnail {
@@ -1281,7 +1308,7 @@ h1.main-title {
     transform: translate(-50%, -50%);
     font-size: 1rem;
     color: white;
-    background-color: rgba(0,0,0,0.5);
+    background-color: rgba(0, 0, 0, 0.5);
     border-radius: 50%;
     width: 40px;
     height: 40px;
@@ -1338,7 +1365,8 @@ h1.main-title {
 
 .video-player-wrapper {
     position: relative;
-    padding-bottom: 56.25%; /* 16:9 aspect ratio */
+    padding-bottom: 56.25%;
+    /* 16:9 aspect ratio */
     height: 0;
     overflow: hidden;
     border-radius: var(--border-radius);
@@ -1642,8 +1670,6 @@ footer {
 
 /* Large devices (desktops and up) */
 @media (min-width: 1024px) {
-    .home-section {}
-
     .home-content h1 {
         font-size: 4rem;
     }
@@ -1670,26 +1696,28 @@ footer {
 
 /* MODIFIED - Responsive for Tablets (≤ 992px) */
 @media screen and (max-width: 992px) {
-     
+
     .blog-cta {
         justify-content: center;
-    } 
+    }
 
     .section-box {
         overflow: hidden;
-        padding: 45px 40px; 
+        padding: 45px 40px;
     }
 
     .about-name,
     .blog-name,
     .video-name {
-        font-size: 2.2rem; /* Slightly smaller title */
+        font-size: 2.2rem;
+        /* Slightly smaller title */
     }
 
     .about-text p,
     .blog-text p,
     .video-text p {
-        font-size: 1rem; /* Standardize paragraph font size */
+        font-size: 1rem;
+        /* Standardize paragraph font size */
         line-height: 1.7;
     }
 
@@ -1697,11 +1725,12 @@ footer {
     .about-content,
     .blog-content,
     .video-content {
-        grid-template-columns: 1fr; /* Stack the columns */
+        grid-template-columns: 1fr;
+        /* Stack the columns */
         gap: 40px;
         text-align: center;
     }
-    
+
     .about-divider,
     .blog-divider,
     .video-divider {
@@ -1711,9 +1740,11 @@ footer {
     .about-image-container,
     .blog-image-container,
     .video-image-container {
-        transform: rotate(0); /* Remove rotation on smaller screens */
+        transform: rotate(0);
+        /* Remove rotation on smaller screens */
         margin: 20px auto 0;
-        order: -1; /* This will display the image BEFORE the text on mobile */
+        order: -1;
+        /* This will display the image BEFORE the text on mobile */
         width: 70%;
 
     }
@@ -1726,7 +1757,7 @@ footer {
         padding-right: 0;
         margin-bottom: 40px;
     }
-    
+
     .about-header .main-title {
         font-size: 2.5rem;
     }
@@ -1763,31 +1794,36 @@ footer {
     }
 
     .section-box {
-        padding: 40px 30px; /* Further reduce padding */
+        padding: 40px 30px;
+        /* Further reduce padding */
     }
 
     .about-name,
     .blog-name,
     .video-name {
-        font-size: 2rem; /* Make title more compact */
+        font-size: 2rem;
+        /* Make title more compact */
     }
 
     .about-text p,
     .blog-text p,
     .video-text p {
-        text-align: justify; /* Justify text for a cleaner look on mobile */
+        text-align: justify;
+        /* Justify text for a cleaner look on mobile */
     }
 
     .about-image-container,
     .blog-image-container,
     .video-image-container {
-        width: 80%; /* Adjust image width relative to the container */
+        width: 80%;
+        /* Adjust image width relative to the container */
     }
 
     .profile-image,
     .blog-image,
     .video-image {
-        height: 320px; /* Taller image for portrait layouts */
+        height: 320px;
+        /* Taller image for portrait layouts */
     }
 
 
@@ -1930,7 +1966,8 @@ footer {
         gap: 20px;
     }
 
-    .prev-post, .next-post {
+    .prev-post,
+    .next-post {
         max-width: 100%;
     }
 
@@ -1962,27 +1999,27 @@ footer {
     }
 
     .footer-subscribe-section h2 {
-      font-size: 1.5rem;
+        font-size: 1.5rem;
     }
 
     .footer-subscribe-section p {
-      font-size: 0.95rem;
+        font-size: 0.95rem;
     }
 
     .subscribe-input-group {
-      flex-direction: column;
-      align-items: stretch;
+        flex-direction: column;
+        align-items: stretch;
     }
 
     .subscribe-input-group input,
     .subscribe-input-group button {
-      width: 100%;
-      max-width: none;
+        width: 100%;
+        max-width: none;
     }
 
     .subscribe-input-group button {
-      padding: 12px 20px;
-      font-size: 1rem;
+        padding: 12px 20px;
+        font-size: 1rem;
     }
 }
 
@@ -1991,38 +2028,43 @@ footer {
     .home-content h1 {
         font-size: 2.5rem;
     }
-    
+
     .section {
         padding: 40px 0;
     }
 
     .section-box {
-        padding: 30px 20px; /* Final padding for small screens */
+        padding: 30px 20px;
+        /* Final padding for small screens */
     }
 
     .about-name,
     .blog-name,
     .video-name {
-        font-size: 1.8rem; /* Final title size */
+        font-size: 1.8rem;
+        /* Final title size */
     }
 
     .about-text p,
     .blog-text p,
     .video-text p {
-        font-size: 0.95rem; /* Make text slightly smaller */
+        font-size: 0.95rem;
+        /* Make text slightly smaller */
         line-height: 1.6;
     }
 
     .about-image-container,
     .blog-image-container,
     .video-image-container {
-        width: 90%; /* Image takes up more space on small screens */
+        width: 90%;
+        /* Image takes up more space on small screens */
     }
 
     .profile-image,
     .blog-image,
     .video-image {
-        height: 280px; /* Adjust image height for small phones */
+        height: 280px;
+        /* Adjust image height for small phones */
     }
 
 
@@ -2094,10 +2136,12 @@ footer {
 
 /* Smallest Phone Screens (≤ 480px) */
 @media screen and (max-width: 480px) {
+
     .profile-image,
     .blog-image,
     .video-image {
-        height: 280px; /* Adjust image height for small screens */
+        height: 280px;
+        /* Adjust image height for small screens */
     }
 
     .about-name,
@@ -2105,7 +2149,7 @@ footer {
     .video-name {
         font-size: 1.8rem;
     }
-    
+
     .section-box {
         padding: 25px 20px;
         border-radius: 20px;
@@ -2117,9 +2161,9 @@ footer {
         font-size: 0.95rem;
     }
 
-    
 
-    
+
+
 
     .blog-cta {
         flex-direction: column;
@@ -2167,20 +2211,20 @@ footer {
     }
 
     .footer-subscribe-section h2 {
-      font-size: 1.3rem;
+        font-size: 1.3rem;
     }
 
     .footer-subscribe-section p {
-      font-size: 0.9rem;
+        font-size: 0.9rem;
     }
 
     .subscribe-input-group button {
-      font-size: 0.95rem;
-      padding: 10px 18px;
+        font-size: 0.95rem;
+        padding: 10px 18px;
     }
 
     .subscribe-message {
-      font-size: 0.85rem;
+        font-size: 0.85rem;
     }
 }
 
