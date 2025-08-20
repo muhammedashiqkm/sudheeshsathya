@@ -124,6 +124,10 @@ header {
     transform: translateY(0);
 }
 
+.copyright-message{
+   font-size: 0.8rem;
+}
+
 header.scrolled {
     background-color: black;
     box-shadow: 0 5px 20px rgba(0, 0, 0, 0.5);
@@ -1648,7 +1652,7 @@ h1.main-title {
 /* Footer */
 footer {
     color: #ffffff;
-    padding: 40px 20px;
+    padding: 10px 20px;
     text-align: center;
 }
 

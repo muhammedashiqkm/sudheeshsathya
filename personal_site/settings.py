@@ -14,7 +14,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Quick-start development settings - unsuitable for production
 SECRET_KEY = os.environ.get('SECRET_KEY')
-DEBUG = True
+DEBUG = os.environ.get('DJANGO_DEBUG', 'False') == 'True'
 
 # The ALLOWED_HOSTS will be read from the .env file
 # It splits the comma-separated string into a list
@@ -22,6 +22,7 @@ ALLOWED_HOSTS = ['*']
 
 # Application definition
 INSTALLED_APPS = [
+    'jazzmin',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -30,6 +31,7 @@ INSTALLED_APPS = [
     'whitenoise.runserver_nostatic', #
     'django.contrib.staticfiles',
     'home.apps.HomeConfig',
+    
 ]
 
 MIDDLEWARE = [
@@ -48,6 +50,7 @@ ROOT_URLCONF = 'personal_site.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
@@ -63,9 +66,60 @@ TEMPLATES = [
 WSGI_APPLICATION = 'personal_site.wsgi.application'
 
 # Database
-DATABASES = {
-    'default': dj_database_url.config(conn_max_age=600)
+if DEBUG:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
+    }
+else:
+    DATABASES = {
+        'default': dj_database_url.config(conn_max_age=600)
+    }
+
+# Celery Configuration
+CELERY_BROKER_URL = 'redis://localhost:6379/0'
+CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_TIMEZONE = 'Asia/Kolkata' # Or your timezone
+
+# myproject/settings.py
+
+JAZZMIN_SETTINGS = {
+    
+    "site_title": "Sudheesh Sathya",
+
+    
+    "site_header": "MyBlog",
+
+    
+
+    
+    "welcome_sign": "Welcome to the MyBlog Admin Panel",
+
+    
+    "copyright": "Sudheesh Sathya Ltd.",
+
+    # The model admin to search from the search bar, search model admin has to be defined in your app.admin.py
+    "search_model": "home.Post",
+
+    # UI Tweaks
+    "show_sidebar": True,
+    "navigation_expanded": True,
+    "changeform_format": "horizontal_tabs",
+    # Override change forms on a per modeladmin basis
+    "changeform_format_overrides": {
+        "auth.user": "collapsible",
+        "auth.group": "vertical_tabs",
+    },
 }
+
+# A custom setting for constructing URLs in background tasks
+SITE_DOMAIN = 'https://yourdomain.com' # Replace with your actual domain
+
 
 # Password validation
 AUTH_PASSWORD_VALIDATORS = [
