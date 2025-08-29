@@ -15,35 +15,35 @@ def home(request):
 
 # Blog list with categories and recent posts
 def blog_list(request):
+    """
+    Display a list of blog posts, with optional filtering by category or featured status.
+    """
+    post_list = Post.objects.filter(is_published=True).select_related('category').order_by('-created_at')
     categories = Category.objects.all()
-    recent_posts = Post.objects.filter(is_published=True)[:6]
 
-    context = {
-        'categories': categories,
-        'recent_posts': recent_posts,
-    }
+    # Filtering logic
+    category_slug = request.GET.get('category')
+    featured = request.GET.get('featured')
 
-    return render(request, 'blog_list.html', context)
+    if category_slug:
+        post_list = post_list.filter(category__slug=category_slug)
+    
+    if featured:
+        post_list = post_list.filter(is_featured=True)
 
-
-def blog_category(request, category_slug):
-    category = get_object_or_404(Category, slug=category_slug)
-
-    post_list = Post.objects.filter(
-        category=category, 
-        is_published=True
-    ).order_by('-created_at')
-
-    paginator = Paginator(post_list, 9)
+    # Pagination setup
+    paginator = Paginator(post_list, 9) # Show 9 posts per page
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
 
     context = {
-        'category': category,
-        'posts': page_obj, 
+        'posts': page_obj,
+        'categories': categories,
+        'active_category': category_slug,
     }
+    return render(request, 'blog_list.html', context)
 
-    return render(request, 'blog_category.html', context)
+
 
 # Blog detail with next/previous and related posts
 def blog_detail(request, post_slug):

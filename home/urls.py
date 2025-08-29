@@ -14,7 +14,6 @@ urlpatterns = [
     
     # Blog URLs
     path('blog/', views.blog_list, name='blog_list'),
-    path('blog/category/<slug:category_slug>/', views.blog_category, name='blog_category'),
     path('blog/<slug:post_slug>/', views.blog_detail, name='blog_detail'),
 
     # Video URLs

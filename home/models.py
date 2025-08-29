@@ -21,9 +21,9 @@ class Category(models.Model):
         if not self.slug:
             self.slug = slugify(self.name)
         super().save(*args, **kwargs)
-
+        
     def get_absolute_url(self):
-        return reverse('blog_category', args=[self.slug])
+        return f"{reverse('blog_list')}?category={self.slug}"
 
 
 class Tag(models.Model):
@@ -53,6 +53,7 @@ class Post(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     is_published = models.BooleanField(default=True)
     notification_sent_at = models.DateTimeField(null=True, blank=True, editable=False)
+    is_featured = models.BooleanField(default=False, help_text="Check to feature this post on the main blog page.")
 
     class Meta:
         ordering = ['-created_at']

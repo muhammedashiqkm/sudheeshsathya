@@ -13,8 +13,7 @@ class PostForm(forms.ModelForm):
 
     class Meta:
         model = Post
-        # Ensure 'slug' is included if you want it to be editable in the form
-        fields = ['title', 'slug', 'excerpt', 'image', 'category', 'tags', 'is_published', 'send_to_subscribers']
+        fields = ['title', 'slug', 'excerpt', 'image', 'category', 'tags', 'is_published', 'is_featured', 'send_to_subscribers']
         widgets = {
             'excerpt': forms.Textarea(attrs={'rows': 3}),
             'tags': forms.SelectMultiple(attrs={'class': 'select2'})
@@ -41,7 +40,7 @@ class ContentBlockForm(forms.ModelForm):
 class CategoryForm(forms.ModelForm):
     class Meta:
         model = Category
-        fields = ['name', 'description', 'image']
+        fields = ['name', 'description']
         widgets = {
             'description': forms.Textarea(attrs={'rows': 3})
         }
