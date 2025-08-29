@@ -3,6 +3,10 @@
 
 {% block title %}{{ video.title }}{% endblock %}
 
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'css/video.css' %}">
+{% endblock %}
+
 {% block content %}
 <section class="blog-detail-section video-detail-page">
     <div class="container">

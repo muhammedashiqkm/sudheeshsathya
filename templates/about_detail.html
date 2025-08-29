@@ -3,6 +3,11 @@
 
 {% block title %}{{ about_page.title }} - About{% endblock %}
 
+{% block extra_css %}
+    {# Make sure you are using the revamped CSS for the new look #}
+    <link rel="stylesheet" href="{% static 'css/about.css' %}">
+{% endblock %}
+
 {% block content %}
 <section class="about-detail-section">
     <div class="container">

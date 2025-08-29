@@ -1,7 +1,7 @@
 from django.db import models
 from django.utils.text import slugify
 from django.urls import reverse
-from django.utils import timezone # Import timezone
+from django.utils import timezone
 
 # Create your models here.
 class Category(models.Model):
@@ -46,14 +46,12 @@ class Post(models.Model):
     title = models.CharField(max_length=200)
     slug = models.SlugField(max_length=200, unique=True)
     excerpt = models.TextField(help_text="A short description of the post")
-    # The 'content' field is now replaced by the ContentBlock model below
     image = models.ImageField(upload_to='blog/', blank=True, null=True)
     category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='posts')
     tags = models.ManyToManyField(Tag, blank=True, related_name='posts')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     is_published = models.BooleanField(default=True)
-    # New field to track notification status
     notification_sent_at = models.DateTimeField(null=True, blank=True, editable=False)
 
     class Meta:

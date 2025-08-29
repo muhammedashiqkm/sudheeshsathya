@@ -1,0 +1,139 @@
+/*
+* Stylesheet for the About Page (about_detail.html)
+*/
+
+.about-detail-section {
+    background-color: #000;
+    color: #fff;
+    padding: 120px 20px;
+    font-family: 'Poppins', sans-serif;
+}
+
+.about-detail-section .container {
+    max-width: 1100px;
+    margin: 0 auto;
+}
+
+.about-header-1 {
+    text-align: center;
+    margin-bottom: 60px;
+}
+
+.about-header-1 .main-title {
+    font-size: 3rem;
+    font-weight: 800;
+    margin: 0;
+}
+
+.about-header-1 .subtitle {
+    font-size: 1rem;
+    color: #aaa;
+    margin-top: 10px;
+}
+
+.about-content-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 50px;
+}
+
+.about-image-box {
+    flex: 1 1 280px;
+    text-align: center;
+}
+
+.about-profile-image {
+    width: 260px;
+    height: 260px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 4px solid #fff;
+    margin: 0 auto 20px;
+    transition: transform 0.3s ease;
+}
+
+.about-profile-image:hover {
+    transform: scale(1.05);
+}
+
+.social-icons {
+    margin-top: 15px;
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+.social-icons a {
+    font-size: 1.4rem;
+    color: #fff;
+    transition: color 0.3s ease;
+}
+
+.social-icons a:hover {
+    color: #1da1f2;
+}
+
+.about-text-box {
+    flex: 2 1 500px;
+}
+
+.greeting-heading {
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin-bottom: 20px;
+    color: #fff;
+}
+
+.about-description {
+    font-size: 1rem;
+    line-height: 1.8;
+    color: #ccc;
+    margin-bottom: 25px;
+}
+
+/* ==========================================================================
+   Responsive Styles for About Page
+   ========================================================================== */
+
+/* --- Mobile Devices and Tablets (<= 768px) --- */
+@media (max-width: 768px) {
+    .about-detail-section {
+        padding: 100px 20px;
+    }
+    .about-header-1 .main-title {
+        font-size: 2.5rem;
+    }
+    .about-content-wrapper {
+        flex-direction: column; /* Stack image and text vertically */
+        align-items: center;
+        text-align: center;
+    }
+    .about-profile-image {
+        width: 220px;
+        height: 220px;
+    }
+    .greeting-heading {
+        font-size: 1.5rem;
+    }
+}
+
+/* --- Small Mobile Devices (<= 480px) --- */
+@media (max-width: 480px) {
+    .about-header-1 .main-title {
+        font-size: 2rem;
+    }
+    .about-profile-image {
+        width: 180px;
+        height: 180px;
+    }
+    .greeting-heading {
+        font-size: 1.3rem;
+    }
+    .about-description {
+        font-size: 0.95rem;
+        text-align: justify;
+    }
+}

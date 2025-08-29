@@ -3,6 +3,10 @@
 
 {% block title %}{{ post.title }} - Sudeesh Sathya{% endblock %}
 
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'css/blog.css' %}">
+{% endblock %}
+
 {% block content %}
 <section class="blog-detail-section">
     <div class="container">
