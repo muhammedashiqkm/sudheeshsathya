@@ -139,15 +139,15 @@ DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 # --- Default primary key field type ---
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# --- UPDATED: Production Security Settings ---
-# These are read from the .env file.
-# In production (DEBUG=False), they should be set to True.
-SECURE_SSL_REDIRECT = os.environ.get('SECURE_SSL_REDIRECT', 'False').lower() in ('true', '1', 't')
-SESSION_COOKIE_SECURE = os.environ.get('SESSION_COOKIE_SECURE', 'False').lower() in ('true', '1', 't')
-CSRF_COOKIE_SECURE = os.environ.get('CSRF_COOKIE_SECURE', 'False').lower() in ('true', '1', 't')
+# # --- UPDATED: Production Security Settings ---
+# # These are read from the .env file.
+# # In production (DEBUG=False), they should be set to True.
+# SECURE_SSL_REDIRECT = os.environ.get('SECURE_SSL_REDIRECT', 'False').lower() in ('true', '1', 't')
+# SESSION_COOKIE_SECURE = os.environ.get('SESSION_COOKIE_SECURE', 'False').lower() in ('true', '1', 't')
+# CSRF_COOKIE_SECURE = os.environ.get('CSRF_COOKIE_SECURE', 'False').lower() in ('true', '1', 't')
 
-# Optional: HSTS (for advanced security)
-# if not DEBUG:
-#     SECURE_HSTS_SECONDS = 31536000 # (1 year)
-#     SECURE_HSTS_INCLUDE_SUBDOMAINS = True
-#     SECURE_HSTS_PRELOAD = True
+# # Optional: HSTS (for advanced security)
+# # if not DEBUG:
+# #     SECURE_HSTS_SECONDS = 31536000 # (1 year)
+# #     SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+# #     SECURE_HSTS_PRELOAD = True

@@ -1,24 +1,21 @@
+<!-- blog_list_content.html -->
 {% load static %}
+{% load query_utils %}
 
 <!-- FILTERS -->
 <div class="video-filters">
     <a href="{% url 'blog_list' %}"
        class="btn filter-btn {% if not active_category and not request.GET.featured %}primary-btn{% else %}secondary-btn{% endif %}"
-       hx-get="{% url 'blog_list_partial' %}"
-       hx-target="#content-container"
-       hx-push-url="{% url 'blog_list' %}"
-       hx-on::before-request="this.classList.add('loading')"
-       hx-on::after-request="this.classList.remove('loading')">
+       hx-get="{% url 'blog_list_partial' %}" hx-target="#content-container" hx-push-url="{% url 'blog_list' %}"
+       hx-on::before-request="this.classList.add('loading')" hx-on::after-request="this.classList.remove('loading')">
         All Posts
     </a>
 
     {% if has_featured %}
     <a href="{% url 'blog_list' %}?featured=true"
        class="btn filter-btn {% if request.GET.featured %}primary-btn{% else %}secondary-btn{% endif %}"
-       hx-get="{% url 'blog_list_partial' %}?featured=true"
-       hx-target="#content-container"
-       hx-push-url="{% url 'blog_list' %}?featured=true"
-       hx-on::before-request="this.classList.add('loading')"
+       hx-get="{% url 'blog_list_partial' %}?featured=true" hx-target="#content-container"
+       hx-push-url="{% url 'blog_list' %}?featured=true" hx-on::before-request="this.classList.add('loading')"
        hx-on::after-request="this.classList.remove('loading')">
         Featured
     </a>
@@ -27,11 +24,9 @@
     {% for category in categories %}
     <a href="{% url 'blog_list' %}?category={{ category.slug }}"
        class="btn filter-btn {% if active_category == category.slug %}primary-btn{% else %}secondary-btn{% endif %}"
-       hx-get="{% url 'blog_list_partial' %}?category={{ category.slug }}"
-       hx-target="#content-container"
+       hx-get="{% url 'blog_list_partial' %}?category={{ category.slug }}" hx-target="#content-container"
        hx-push-url="{% url 'blog_list' %}?category={{ category.slug }}"
-       hx-on::before-request="this.classList.add('loading')"
-       hx-on::after-request="this.classList.remove('loading')">
+       hx-on::before-request="this.classList.add('loading')" hx-on::after-request="this.classList.remove('loading')">
         {{ category.name }}
     </a>
     {% endfor %}
@@ -40,9 +35,10 @@
 <!-- GRID -->
 <div class="blog-posts-grid">
     {% for post in posts %}
-    <div class="blog-post-card">
-        <!-- PRESERVE QUERYSTRING -->
-        <a href="{% url 'blog_detail' post.slug %}?{{ request.META.QUERY_STRING }}">
+    <div class="blog-post-card" id="card-{{ post.slug }}">
+        {% url 'blog_detail' post.slug as detail_url %}
+        {% with clean_query=request.META.QUERY_STRING|preserve_query:'scroll_to' %}
+        <a href="{{ detail_url }}?{{ clean_query }}">
             <div class="post-image">
                 {% if post.image %}
                 <img src="{{ post.image.url }}" alt="{{ post.title }}">
@@ -51,17 +47,19 @@
                 {% endif %}
             </div>
         </a>
+
         <div class="post-content">
             <div class="post-category">{{ post.category.name }}</div>
             <h3 class="post-title">
-                <a href="{% url 'blog_detail' post.slug %}?{{ request.META.QUERY_STRING }}">{{ post.title }}</a>
+                <a href="{{ detail_url }}?{{ clean_query }}">{{ post.title }}</a>
             </h3>
             <div class="post-meta">
                 <span class="post-date">{{ post.published_date|date:"F j, Y" }}</span>
             </div>
             <p class="post-excerpt">{{ post.excerpt }}</p>
-            <a href="{% url 'blog_detail' post.slug %}?{{ request.META.QUERY_STRING }}" class="read-more">Read More</a>
+            <a href="{{ detail_url }}?{{ clean_query }}" class="read-more">Read More</a>
         </div>
+        {% endwith %}
     </div>
     {% empty %}
     <div class="no-posts">

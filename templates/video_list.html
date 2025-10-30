@@ -20,3 +20,28 @@
     </div>
 </section>
 {% endblock %}
+
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const params = new URLSearchParams(window.location.search);
+        const scrollTo = params.get('scroll_to');
+        if (scrollTo) {
+            const target = document.getElementById('card-' + scrollTo);
+            if (target) {
+                target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                target.style.transition = 'background-color 0.6s ease';
+                target.style.backgroundColor = '#fff8e1';
+                setTimeout(() => {
+                    target.style.backgroundColor = '';
+                }, 1800);
+            }
+            // Clean URL after scroll
+            params.delete('scroll_to');
+            const newUrl = window.location.pathname + (params.toString() ? '?' + params.toString() : '');
+            history.replaceState(null, '', newUrl);
+        }
+    });
+</script>
+{% endblock %}

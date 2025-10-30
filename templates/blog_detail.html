@@ -1,5 +1,7 @@
+<!-- blog_detail.html -->
 {% extends "base.html" %}
 {% load static %}
+{% load query_utils %}
 
 {% block title %}{{ post.title }} - Sudeesh Sathya{% endblock %}
 
@@ -43,9 +45,10 @@
                 {% endfor %}
             </div>
 
-            <!-- SMART BACK BUTTON -->
+            <!-- SMART BACK BUTTON: preserve all except scroll_to, then add new -->
             <div class="back-to-blog">
-                <a href="{% url 'blog_list' %}?{{ request.META.QUERY_STRING }}" class="btn secondary-btn">
+                <a href="{% url 'blog_list' %}?{{ request.META.QUERY_STRING|preserve_query:'scroll_to'|add_query:'scroll_to='|add:post.slug }}"
+                   class="btn secondary-btn">
                     Back to Blog
                 </a>
             </div>

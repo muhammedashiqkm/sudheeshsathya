@@ -1,24 +1,21 @@
+<!-- video_list_content.html -->
 {% load static %}
+{% load query_utils %}
 
 <!-- FILTERS -->
 <div class="video-filters">
     <a href="{% url 'video_list' %}"
        class="btn filter-btn {% if not active_category and not request.GET.featured %}primary-btn{% else %}secondary-btn{% endif %}"
-       hx-get="{% url 'video_list_partial' %}"
-       hx-target="#content-container"
-       hx-push-url="{% url 'video_list' %}"
-       hx-on::before-request="this.classList.add('loading')"
-       hx-on::after-request="this.classList.remove('loading')">
+       hx-get="{% url 'video_list_partial' %}" hx-target="#content-container" hx-push-url="{% url 'video_list' %}"
+       hx-on::before-request="this.classList.add('loading')" hx-on::after-request="this.classList.remove('loading')">
         All Videos
     </a>
 
     {% if has_featured %}
     <a href="{% url 'video_list' %}?featured=true"
        class="btn filter-btn {% if request.GET.featured %}primary-btn{% else %}secondary-btn{% endif %}"
-       hx-get="{% url 'video_list_partial' %}?featured=true"
-       hx-target="#content-container"
-       hx-push-url="{% url 'video_list' %}?featured=true"
-       hx-on::before-request="this.classList.add('loading')"
+       hx-get="{% url 'video_list_partial' %}?featured=true" hx-target="#content-container"
+       hx-push-url="{% url 'video_list' %}?featured=true" hx-on::before-request="this.classList.add('loading')"
        hx-on::after-request="this.classList.remove('loading')">
         Featured
     </a>
@@ -27,11 +24,9 @@
     {% for category in categories %}
     <a href="{% url 'video_list' %}?category={{ category.slug }}"
        class="btn filter-btn {% if active_category == category.slug %}primary-btn{% else %}secondary-btn{% endif %}"
-       hx-get="{% url 'video_list_partial' %}?category={{ category.slug }}"
-       hx-target="#content-container"
+       hx-get="{% url 'video_list_partial' %}?category={{ category.slug }}" hx-target="#content-container"
        hx-push-url="{% url 'video_list' %}?category={{ category.slug }}"
-       hx-on::before-request="this.classList.add('loading')"
-       hx-on::after-request="this.classList.remove('loading')">
+       hx-on::before-request="this.classList.add('loading')" hx-on::after-request="this.classList.remove('loading')">
         {{ category.name }}
     </a>
     {% endfor %}
@@ -40,9 +35,9 @@
 <!-- GRID -->
 <div class="videos-grid">
     {% for video in videos %}
-    <div class="video-card">
-        <!-- PRESERVE QUERYSTRING -->
-        <a href="{{ video.get_absolute_url }}?{{ request.META.QUERY_STRING }}">
+    <div class="video-card" id="card-{{ video.slug }}">
+        {% with clean_query=request.META.QUERY_STRING|preserve_query:'scroll_to' %}
+        <a href="{{ video.get_absolute_url }}?{{ clean_query }}">
             <div class="video-thumbnail">
                 {% if video.thumbnail %}
                 <img src="{{ video.thumbnail.url }}" alt="{{ video.title }}">
@@ -57,10 +52,11 @@
             <div class="video-category-badge">{{ video.category.name }}</div>
             {% endif %}
             <h3 class="video-title">
-                <a href="{{ video.get_absolute_url }}?{{ request.META.QUERY_STRING }}">{{ video.title }}</a>
+                <a href="{{ video.get_absolute_url }}?{{ clean_query }}">{{ video.title }}</a>
             </h3>
             <p class="video-excerpt">{{ video.excerpt }}</p>
         </div>
+        {% endwith %}
     </div>
     {% empty %}
     <div class="no-content">

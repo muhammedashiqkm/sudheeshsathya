@@ -1,5 +1,7 @@
+<!-- video_detail.html -->
 {% extends "base.html" %}
 {% load static %}
+{% load query_utils %}
 
 {% block title %}{{ video.title }}{% endblock %}
 
@@ -31,7 +33,8 @@
 
         <!-- SMART BACK BUTTON -->
         <div class="back-to-videos">
-            <a href="{% url 'video_list' %}?{{ request.META.QUERY_STRING }}" class="btn secondary-btn">
+            <a href="{% url 'video_list' %}?{{ request.META.QUERY_STRING|preserve_query:'scroll_to'|add_query:'scroll_to='|add:video.slug }}"
+               class="btn secondary-btn">
                 Back to Videos
             </a>
         </div>
