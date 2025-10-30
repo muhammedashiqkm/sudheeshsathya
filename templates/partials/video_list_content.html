@@ -1,0 +1,122 @@
+{% load static %}
+
+<!-- FILTERS -->
+<div class="video-filters">
+    <a href="{% url 'video_list' %}"
+       class="btn filter-btn {% if not active_category and not request.GET.featured %}primary-btn{% else %}secondary-btn{% endif %}"
+       hx-get="{% url 'video_list_partial' %}"
+       hx-target="#content-container"
+       hx-push-url="{% url 'video_list' %}"
+       hx-on::before-request="this.classList.add('loading')"
+       hx-on::after-request="this.classList.remove('loading')">
+        All Videos
+    </a>
+
+    {% if has_featured %}
+    <a href="{% url 'video_list' %}?featured=true"
+       class="btn filter-btn {% if request.GET.featured %}primary-btn{% else %}secondary-btn{% endif %}"
+       hx-get="{% url 'video_list_partial' %}?featured=true"
+       hx-target="#content-container"
+       hx-push-url="{% url 'video_list' %}?featured=true"
+       hx-on::before-request="this.classList.add('loading')"
+       hx-on::after-request="this.classList.remove('loading')">
+        Featured
+    </a>
+    {% endif %}
+
+    {% for category in categories %}
+    <a href="{% url 'video_list' %}?category={{ category.slug }}"
+       class="btn filter-btn {% if active_category == category.slug %}primary-btn{% else %}secondary-btn{% endif %}"
+       hx-get="{% url 'video_list_partial' %}?category={{ category.slug }}"
+       hx-target="#content-container"
+       hx-push-url="{% url 'video_list' %}?category={{ category.slug }}"
+       hx-on::before-request="this.classList.add('loading')"
+       hx-on::after-request="this.classList.remove('loading')">
+        {{ category.name }}
+    </a>
+    {% endfor %}
+</div>
+
+<!-- GRID -->
+<div class="videos-grid">
+    {% for video in videos %}
+    <div class="video-card">
+        <!-- PRESERVE QUERYSTRING -->
+        <a href="{{ video.get_absolute_url }}?{{ request.META.QUERY_STRING }}">
+            <div class="video-thumbnail">
+                {% if video.thumbnail %}
+                <img src="{{ video.thumbnail.url }}" alt="{{ video.title }}">
+                {% else %}
+                <img src="{% static 'images/video-placeholder.jpg' %}" alt="Placeholder">
+                {% endif %}
+                <div class="play-icon"><i class="fas fa-play"></i></div>
+            </div>
+        </a>
+        <div class="video-card-content">
+            {% if video.category %}
+            <div class="video-category-badge">{{ video.category.name }}</div>
+            {% endif %}
+            <h3 class="video-title">
+                <a href="{{ video.get_absolute_url }}?{{ request.META.QUERY_STRING }}">{{ video.title }}</a>
+            </h3>
+            <p class="video-excerpt">{{ video.excerpt }}</p>
+        </div>
+    </div>
+    {% empty %}
+    <div class="no-content">
+        <p>No videos found matching your criteria. Try another filter!</p>
+    </div>
+    {% endfor %}
+</div>
+
+<!-- PAGINATION -->
+{% if videos.paginator.num_pages > 1 %}
+<nav class="pagination-nav" aria-label="Page navigation">
+    <ul class="pagination">
+        {% if videos.has_previous %}
+        <li class="page-item">
+            <a class="page-link"
+               href="{% url 'video_list' %}?page={{ videos.previous_page_number }}{% if request.GET.category %}&category={{ request.GET.category }}{% endif %}{% if request.GET.featured %}&featured={{ request.GET.featured }}{% endif %}"
+               hx-get="{% url 'video_list_partial' %}?page={{ videos.previous_page_number }}{% if request.GET.category %}&category={{ request.GET.category }}{% endif %}{% if request.GET.featured %}&featured={{ request.GET.featured }}{% endif %}"
+               hx-target="#content-container"
+               hx-push-url="{% url 'video_list' %}?page={{ videos.previous_page_number }}{% if request.GET.category %}&category={{ request.GET.category }}{% endif %}{% if request.GET.featured %}&featured={{ request.GET.featured }}{% endif %}">
+                Previous
+            </a>
+        </li>
+        {% endif %}
+
+        {% for num in videos.paginator.page_range %}
+        {% if videos.number == num %}
+        <li class="page-item active"><span class="page-link">{{ num }}</span></li>
+        {% else %}
+        <li class="page-item">
+            <a class="page-link"
+               href="{% url 'video_list' %}?page={{ num }}{% if request.GET.category %}&category={{ request.GET.category }}{% endif %}{% if request.GET.featured %}&featured={{ request.GET.featured }}{% endif %}"
+               hx-get="{% url 'video_list_partial' %}?page={{ num }}{% if request.GET.category %}&category={{ request.GET.category }}{% endif %}{% if request.GET.featured %}&featured={{ request.GET.featured }}{% endif %}"
+               hx-target="#content-container"
+               hx-push-url="{% url 'video_list' %}?page={{ num }}{% if request.GET.category %}&category={{ request.GET.category }}{% endif %}{% if request.GET.featured %}&featured={{ request.GET.featured }}{% endif %}">
+                {{ num }}
+            </a>
+        </li>
+        {% endif %}
+        {% endfor %}
+
+        {% if videos.has_next %}
+        <li class="page-item">
+            <a class="page-link"
+               href="{% url 'video_list' %}?page={{ videos.next_page_number }}{% if request.GET.category %}&category={{ request.GET.category }}{% endif %}{% if request.GET.featured %}&featured={{ request.GET.featured }}{% endif %}"
+               hx-get="{% url 'video_list_partial' %}?page={{ videos.next_page_number }}{% if request.GET.category %}&category={{ request.GET.category }}{% endif %}{% if request.GET.featured %}&featured={{ request.GET.featured }}{% endif %}"
+               hx-target="#content-container"
+               hx-push-url="{% url 'video_list' %}?page={{ videos.next_page_number }}{% if request.GET.category %}&category={{ request.GET.category }}{% endif %}{% if request.GET.featured %}&featured={{ request.GET.featured }}{% endif %}">
+                Next
+            </a>
+        </li>
+        {% endif %}
+    </ul>
+</nav>
+{% endif %}
+
+<!-- LOADING INDICATOR -->
+<div class="htmx-indicator text-center mt-4">
+    <i class="fas fa-spinner fa-spin"></i> Loading...
+</div>

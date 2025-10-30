@@ -53,7 +53,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
         navLinks.forEach(link => {
             link.classList.remove('active');
-            if (link.getAttribute('href').includes(currentSectionId)) {
+            
+            // --- THIS IS THE FIX ---
+            // Only add 'active' if currentSectionId is NOT empty
+            if (currentSectionId && link.getAttribute('href').includes(currentSectionId)) {
                 link.classList.add('active');
             }
         });

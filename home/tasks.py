@@ -1,11 +1,11 @@
-# myapp/tasks.py
+# home/tasks.py
 
 from celery import shared_task
 from django.core.mail import EmailMessage
 from django.conf import settings
 from django.urls import reverse
 from django.utils import timezone
-from .models import Post, Subscriber
+from .models import Post, Video, Subscriber 
 
 @shared_task
 def send_post_notification_email_task(post_id):
@@ -17,11 +17,10 @@ def send_post_notification_email_task(post_id):
     except Post.DoesNotExist:
         return f"Post with id {post_id} not found."
 
-    # Mark the notification as sent immediately to prevent race conditions
     post.notification_sent_at = timezone.now()
     post.save(update_fields=['notification_sent_at'])
 
-    subscribers = Subscriber.objects.filter(is_active=True) # Assuming you add an 'is_active' field
+    subscribers = Subscriber.objects.filter(is_active=True)
     recipient_list = [s.email for s in subscribers]
 
     if not recipient_list:
@@ -32,7 +31,8 @@ def send_post_notification_email_task(post_id):
     
     message = (
         f"Hi there!\n\nA new post \"{post.title}\" has been published.\n\n"
-        f"Read it here: {post_url}\n\nStay tuned!"
+        f"Read it here: {post_url}\n\n"
+        f"Read the excerpt:\n{post.excerpt}\n\nStay tuned!"
     )
     from_email = settings.DEFAULT_FROM_EMAIL
 
@@ -44,3 +44,42 @@ def send_post_notification_email_task(post_id):
         return f"Successfully sent notification for post '{post.title}' to {len(recipient_list)} subscribers."
     except Exception as e:
         return f"Failed to send emails for post '{post.title}': {str(e)}"
+
+
+@shared_task
+def send_video_notification_email_task(video_id):
+    """
+    Celery task to send notification emails for a newly published video.
+    """
+    try:
+        video = Video.objects.get(id=video_id)
+    except Video.DoesNotExist:
+        return f"Video with id {video_id} not found."
+
+    video.notification_sent_at = timezone.now()
+    video.save(update_fields=['notification_sent_at'])
+
+    subscribers = Subscriber.objects.filter(is_active=True)
+    recipient_list = [s.email for s in subscribers]
+
+    if not recipient_list:
+        return f"No active subscribers found for video '{video.title}'."
+
+    subject = f"New Video Published: {video.title}"
+    video_url = f"{settings.SITE_DOMAIN}{reverse('video_detail', args=[video.slug])}"
+    
+    message = (
+        f"Hi there!\n\nA new video \"{video.title}\" has been published.\n\n"
+        f"Watch it here: {video_url}\n\n"
+        f"About the video:\n{video.excerpt}\n\nStay tuned!"
+    )
+    from_email = settings.DEFAULT_FROM_EMAIL
+
+    try:
+        email = EmailMessage(
+            subject=subject, body=message, from_email=from_email, to=['no-reply@yourdomain.com'], bcc=recipient_list
+        )
+        email.send(fail_silemailsently=False)
+        return f"Successfully sent notification for video '{video.title}' to {len(recipient_list)} subscribers."
+    except Exception as e:
+        return f"Failed to send for video '{video.title}': {str(e)}"

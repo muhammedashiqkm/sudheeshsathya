@@ -1,5 +1,7 @@
+# home/forms.py
+
 from django import forms
-from .models import Post, Category, Tag, AboutPage, ContentBlock, Video, VideoCategory
+from .models import Post, PostCategory, ContentBlock, AboutPage, Video, VideoCategory, Subscriber
 
 class PostForm(forms.ModelForm):
     """
@@ -13,10 +15,9 @@ class PostForm(forms.ModelForm):
 
     class Meta:
         model = Post
-        fields = ['title', 'slug', 'excerpt', 'image', 'category', 'tags', 'is_published', 'is_featured', 'send_to_subscribers']
+        fields = ['title', 'slug', 'excerpt', 'image', 'category', 'is_published', 'is_featured', 'send_to_subscribers']
         widgets = {
             'excerpt': forms.Textarea(attrs={'rows': 3}),
-            'tags': forms.SelectMultiple(attrs={'class': 'select2'})
         }
 
     def __init__(self, *args, **kwargs):
@@ -37,18 +38,13 @@ class ContentBlockForm(forms.ModelForm):
             'order': forms.NumberInput(attrs={'class': 'form-control', 'style': 'width: 8ch;'}),
         }
 
-class CategoryForm(forms.ModelForm):
+class PostCategoryForm(forms.ModelForm):
     class Meta:
-        model = Category
-        fields = ['name', 'description']
+        model = PostCategory
+        fields = ['name', 'slug', 'description']
         widgets = {
             'description': forms.Textarea(attrs={'rows': 3})
         }
-
-class TagForm(forms.ModelForm):
-    class Meta:
-        model = Tag
-        fields = ['name']
 
 class AboutPageForm(forms.ModelForm):
     class Meta:
@@ -62,15 +58,41 @@ class AboutPageForm(forms.ModelForm):
 class VideoCategoryForm(forms.ModelForm):
     class Meta:
         model = VideoCategory
-        fields = ['name', 'description']
+        fields = ['name', 'slug', 'description']
         widgets = {
             'description': forms.Textarea(attrs={'rows': 3}),
         }
 
 class VideoForm(forms.ModelForm):
+    
+    # --- NEW: Added notification checkbox ---
+    send_to_subscribers = forms.BooleanField(
+        required=False,
+        label="Send notification to all subscribers",
+        help_text="Queues an email for all active subscribers when the video is saved as 'Published'."
+    )
+    # ----------------------------------------
+
     class Meta:
         model = Video
-        fields = ['title', 'slug', 'description', 'video_url', 'thumbnail', 'category', 'is_featured']
+        # UPDATED: Added 'send_to_subscribers' to fields
+        fields = [
+            'title', 'slug', 'excerpt', 'description', 'video_url', 
+            'thumbnail', 'category', 'is_published', 'is_featured', 
+            'send_to_subscribers'
+        ]
         widgets = {
+            'excerpt': forms.Textarea(attrs={'rows': 3}),
             'description': forms.Textarea(attrs={'rows': 4}),
         }
+
+    # --- NEW: Added __init__ to disable checkbox ---
+    def __init__(self, *args, **kwargs):
+        """
+        Disables the notification checkbox if a notification has already been sent.
+        """
+        super().__init__(*args, **kwargs)
+        if self.instance and self.instance.pk and self.instance.notification_sent_at:
+            self.fields['send_to_subscribers'].disabled = True
+            self.fields['send_to_subscribers'].help_text = f"A notification was already sent on {self.instance.notification_sent_at.strftime('%Y-%m-%d %H:%M')}."
+    # ----------------------------------------------

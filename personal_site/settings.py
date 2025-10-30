@@ -13,10 +13,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # --- Core Settings ---
 SECRET_KEY = os.environ.get('SECRET_KEY')
-# A robust way to read boolean values from .env
 DEBUG = os.environ.get('DEBUG', 'False').lower() in ('true', '1', 't')
-# Read comma-separated hosts and split into a list
-ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', 'localhost').split(',')
+ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', 'localhost,127.0.0.1').split(',')
 
 # --- Application Definition ---
 INSTALLED_APPS = [
@@ -65,7 +63,6 @@ TEMPLATES = [
 WSGI_APPLICATION = 'personal_site.wsgi.application'
 
 # --- Database ---
-# Reads the DATABASE_URL from .env and configures the database
 DATABASES = {
     'default': dj_database_url.config(
         default=os.environ.get('DATABASE_URL'),
@@ -74,7 +71,6 @@ DATABASES = {
 }
 
 # --- Celery Configuration ---
-# Reads the Redis URL from .env
 REDIS_URL = os.environ.get('REDIS_URL', 'redis://localhost:6379/0')
 CELERY_BROKER_URL = REDIS_URL
 CELERY_RESULT_BACKEND = REDIS_URL
@@ -126,14 +122,12 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 MEDIA_ROOT = BASE_DIR / 'media'
 MEDIA_URL = '/media/'
 
+# --- UPDATED: CORS settings ---
+# Read allowed origins from .env, defaulting to localhost for development
+CORS_ALLOWED_ORIGINS = os.environ.get('CORS_ALLOWED_ORIGINS', 'http://localhost:3000,http://127.0.0.1:3000').split(',')
 
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000",  
-    "http://127.0.0.1:3000",
-]
 
 # --- Email Configuration ---
-# Reads all email settings from .env
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
@@ -145,3 +139,15 @@ DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 # --- Default primary key field type ---
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+# --- UPDATED: Production Security Settings ---
+# These are read from the .env file.
+# In production (DEBUG=False), they should be set to True.
+SECURE_SSL_REDIRECT = os.environ.get('SECURE_SSL_REDIRECT', 'False').lower() in ('true', '1', 't')
+SESSION_COOKIE_SECURE = os.environ.get('SESSION_COOKIE_SECURE', 'False').lower() in ('true', '1', 't')
+CSRF_COOKIE_SECURE = os.environ.get('CSRF_COOKIE_SECURE', 'False').lower() in ('true', '1', 't')
+
+# Optional: HSTS (for advanced security)
+# if not DEBUG:
+#     SECURE_HSTS_SECONDS = 31536000 # (1 year)
+#     SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+#     SECURE_HSTS_PRELOAD = True

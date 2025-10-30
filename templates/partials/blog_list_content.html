@@ -1,0 +1,123 @@
+{% load static %}
+
+<!-- FILTERS -->
+<div class="video-filters">
+    <a href="{% url 'blog_list' %}"
+       class="btn filter-btn {% if not active_category and not request.GET.featured %}primary-btn{% else %}secondary-btn{% endif %}"
+       hx-get="{% url 'blog_list_partial' %}"
+       hx-target="#content-container"
+       hx-push-url="{% url 'blog_list' %}"
+       hx-on::before-request="this.classList.add('loading')"
+       hx-on::after-request="this.classList.remove('loading')">
+        All Posts
+    </a>
+
+    {% if has_featured %}
+    <a href="{% url 'blog_list' %}?featured=true"
+       class="btn filter-btn {% if request.GET.featured %}primary-btn{% else %}secondary-btn{% endif %}"
+       hx-get="{% url 'blog_list_partial' %}?featured=true"
+       hx-target="#content-container"
+       hx-push-url="{% url 'blog_list' %}?featured=true"
+       hx-on::before-request="this.classList.add('loading')"
+       hx-on::after-request="this.classList.remove('loading')">
+        Featured
+    </a>
+    {% endif %}
+
+    {% for category in categories %}
+    <a href="{% url 'blog_list' %}?category={{ category.slug }}"
+       class="btn filter-btn {% if active_category == category.slug %}primary-btn{% else %}secondary-btn{% endif %}"
+       hx-get="{% url 'blog_list_partial' %}?category={{ category.slug }}"
+       hx-target="#content-container"
+       hx-push-url="{% url 'blog_list' %}?category={{ category.slug }}"
+       hx-on::before-request="this.classList.add('loading')"
+       hx-on::after-request="this.classList.remove('loading')">
+        {{ category.name }}
+    </a>
+    {% endfor %}
+</div>
+
+<!-- GRID -->
+<div class="blog-posts-grid">
+    {% for post in posts %}
+    <div class="blog-post-card">
+        <!-- PRESERVE QUERYSTRING -->
+        <a href="{% url 'blog_detail' post.slug %}?{{ request.META.QUERY_STRING }}">
+            <div class="post-image">
+                {% if post.image %}
+                <img src="{{ post.image.url }}" alt="{{ post.title }}">
+                {% else %}
+                <img src="{% static 'images/blog-placeholder.jpg' %}" alt="{{ post.title }}">
+                {% endif %}
+            </div>
+        </a>
+        <div class="post-content">
+            <div class="post-category">{{ post.category.name }}</div>
+            <h3 class="post-title">
+                <a href="{% url 'blog_detail' post.slug %}?{{ request.META.QUERY_STRING }}">{{ post.title }}</a>
+            </h3>
+            <div class="post-meta">
+                <span class="post-date">{{ post.published_date|date:"F j, Y" }}</span>
+            </div>
+            <p class="post-excerpt">{{ post.excerpt }}</p>
+            <a href="{% url 'blog_detail' post.slug %}?{{ request.META.QUERY_STRING }}" class="read-more">Read More</a>
+        </div>
+    </div>
+    {% empty %}
+    <div class="no-posts">
+        <p>No posts found matching your criteria. Try another filter!</p>
+    </div>
+    {% endfor %}
+</div>
+
+<!-- PAGINATION -->
+{% if posts.paginator.num_pages > 1 %}
+<nav class="pagination-nav" aria-label="Page navigation">
+    <ul class="pagination">
+        {% if posts.has_previous %}
+        <li class="page-item">
+            <a class="page-link"
+               href="{% url 'blog_list' %}?page={{ posts.previous_page_number }}{% if request.GET.category %}&category={{ request.GET.category }}{% endif %}{% if request.GET.featured %}&featured={{ request.GET.featured }}{% endif %}"
+               hx-get="{% url 'blog_list_partial' %}?page={{ posts.previous_page_number }}{% if request.GET.category %}&category={{ request.GET.category }}{% endif %}{% if request.GET.featured %}&featured={{ request.GET.featured }}{% endif %}"
+               hx-target="#content-container"
+               hx-push-url="{% url 'blog_list' %}?page={{ posts.previous_page_number }}{% if request.GET.category %}&category={{ request.GET.category }}{% endif %}{% if request.GET.featured %}&featured={{ request.GET.featured }}{% endif %}">
+                Previous
+            </a>
+        </li>
+        {% endif %}
+
+        {% for num in posts.paginator.page_range %}
+        {% if posts.number == num %}
+        <li class="page-item active"><span class="page-link">{{ num }}</span></li>
+        {% else %}
+        <li class="page-item">
+            <a class="page-link"
+               href="{% url 'blog_list' %}?page={{ num }}{% if request.GET.category %}&category={{ request.GET.category }}{% endif %}{% if request.GET.featured %}&featured={{ request.GET.featured }}{% endif %}"
+               hx-get="{% url 'blog_list_partial' %}?page={{ num }}{% if request.GET.category %}&category={{ request.GET.category }}{% endif %}{% if request.GET.featured %}&featured={{ request.GET.featured }}{% endif %}"
+               hx-target="#content-container"
+               hx-push-url="{% url 'blog_list' %}?page={{ num }}{% if request.GET.category %}&category={{ request.GET.category }}{% endif %}{% if request.GET.featured %}&featured={{ request.GET.featured }}{% endif %}">
+                {{ num }}
+            </a>
+        </li>
+        {% endif %}
+        {% endfor %}
+
+        {% if posts.has_next %}
+        <li class="page-item">
+            <a class="page-link"
+               href="{% url 'blog_list' %}?page={{ posts.next_page_number }}{% if request.GET.category %}&category={{ request.GET.category }}{% endif %}{% if request.GET.featured %}&featured={{ request.GET.featured }}{% endif %}"
+               hx-get="{% url 'blog_list_partial' %}?page={{ posts.next_page_number }}{% if request.GET.category %}&category={{ request.GET.category }}{% endif %}{% if request.GET.featured %}&featured={{ request.GET.featured }}{% endif %}"
+               hx-target="#content-container"
+               hx-push-url="{% url 'blog_list' %}?page={{ posts.next_page_number }}{% if request.GET.category %}&category={{ request.GET.category }}{% endif %}{% if request.GET.featured %}&featured={{ request.GET.featured }}{% endif %}">
+                Next
+            </a>
+        </li>
+        {% endif %}
+    </ul>
+</nav>
+{% endif %}
+
+<!-- LOADING INDICATOR -->
+<div class="htmx-indicator text-center mt-4">
+    <i class="fas fa-spinner fa-spin"></i> Loading...
+</div>

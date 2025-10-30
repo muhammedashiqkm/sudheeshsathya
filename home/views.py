@@ -1,125 +1,208 @@
-from django.shortcuts import render, get_object_or_404
+# home/views.py
+
+from django.shortcuts import render, get_object_or_404, redirect
 from django.core.mail import send_mail
 from django.conf import settings
 from django.http import JsonResponse
-from .models import Category, Post, Tag, Subscriber, AboutPage, Video, VideoCategory
-import logging
+from django.urls import reverse
 from django.core.paginator import Paginator
+from .models import (
+    PostCategory, Post, Subscriber, AboutPage,
+    Video, VideoCategory
+)
+import logging
 
 logger = logging.getLogger(__name__)
 
-# Render static pages
+# ------------------------------------------------------------------
+# HOME
+# ------------------------------------------------------------------
 def home(request):
     return render(request, 'index.html')
 
 
-# Blog list with categories and recent posts
+# ------------------------------------------------------------------
+# BLOG LIST – FULL PAGE
+# ------------------------------------------------------------------
 def blog_list(request):
-    """
-    Display a list of blog posts, with optional filtering by category or featured status.
-    """
-    post_list = Post.objects.filter(is_published=True).select_related('category').order_by('-created_at')
-    categories = Category.objects.all()
+    post_list = Post.objects.filter(is_published=True)\
+                            .select_related('category')\
+                            .order_by('-published_date')
 
-    # Filtering logic
+    categories = PostCategory.objects.all()
+
     category_slug = request.GET.get('category')
     featured = request.GET.get('featured')
 
     if category_slug:
         post_list = post_list.filter(category__slug=category_slug)
-    
     if featured:
         post_list = post_list.filter(is_featured=True)
+    
+    has_featured = Post.objects.filter(is_published=True, is_featured=True).exists()
 
-    # Pagination setup
-    paginator = Paginator(post_list, 9) # Show 9 posts per page
-    page_number = request.GET.get('page')
-    page_obj = paginator.get_page(page_number)
+    paginator = Paginator(post_list, 9)
+    page_obj = paginator.get_page(request.GET.get('page'))
 
     context = {
         'posts': page_obj,
         'categories': categories,
         'active_category': category_slug,
+        'has_featured': has_featured,
     }
     return render(request, 'blog_list.html', context)
 
 
+# ------------------------------------------------------------------
+# BLOG LIST – PARTIAL (HTMX only)
+# ------------------------------------------------------------------
+def blog_list_partial(request):
+    if not request.headers.get('HX-Request'):
+        return redirect(f"{reverse('blog_list')}?{request.META['QUERY_STRING']}")
 
-# Blog detail with next/previous and related posts
-def blog_detail(request, post_slug):
-    post = get_object_or_404(Post, slug=post_slug, is_published=True)
+    post_list = Post.objects.filter(is_published=True)\
+                            .select_related('category')\
+                            .order_by('-published_date')
+
+    category_slug = request.GET.get('category')
+    featured = request.GET.get('featured')
+
+    if category_slug:
+        post_list = post_list.filter(category__slug=category_slug)
+    if featured:
+        post_list = post_list.filter(is_featured=True)
+
+    paginator = Paginator(post_list, 9)
+    page_obj = paginator.get_page(request.GET.get('page'))
+
+    # RECALCULATE has_featured EVERY TIME
+    has_featured = Post.objects.filter(is_published=True, is_featured=True).exists()
 
     context = {
-        'post': post,
+        'posts': page_obj,
+        'categories': PostCategory.objects.all(),
+        'active_category': category_slug,
+        'has_featured': has_featured,  # <-- ALWAYS FRESH
     }
+    return render(request, 'partials/blog_list_content.html', context)
 
+
+# ------------------------------------------------------------------
+# BLOG DETAIL
+# ------------------------------------------------------------------
+def blog_detail(request, post_slug):
+    post = get_object_or_404(
+        Post.objects.prefetch_related('content_blocks'),
+        slug=post_slug,
+        is_published=True
+    )
+    context = {
+        'post': post,
+        'request': request  # <-- ADD THIS
+    }
     return render(request, 'blog_detail.html', context)
 
-# About page detail view
+
+# ------------------------------------------------------------------
+# ABOUT PAGE
+# ------------------------------------------------------------------
 def about_detail(request):
-    # Get the about page content or create a default one if it doesn't exist
     try:
         about_page = AboutPage.objects.first()
     except Exception as e:
         logger.error(f"Error loading about page: {str(e)}")
         about_page = None
 
-    context = {
-        'about_page': about_page
-    }
-
+    context = {'about_page': about_page}
     return render(request, 'about_detail.html', context)
 
-# Video list with categories
+
+# ------------------------------------------------------------------
+# VIDEO LIST – FULL PAGE
+# ------------------------------------------------------------------
 def video_list(request):
-    """
-    Display a list of videos, with optional filtering by category or featured status.
-    """
-    # ADDED: .select_related('category') for performance
-    videos_list = Video.objects.select_related('category').all().order_by('-published_date')
+    videos_list = Video.objects.select_related('category')\
+                               .filter(is_published=True)\
+                               .order_by('-published_date')
+
     categories = VideoCategory.objects.all()
 
-    # Filtering logic (this part is good)
     category_slug = request.GET.get('category')
     featured = request.GET.get('featured')
 
     if category_slug:
-        # No need for a separate get_object_or_404 query here
-        # The filter will handle it. If you need the category object, you can get it.
         videos_list = videos_list.filter(category__slug=category_slug)
-    
     if featured:
         videos_list = videos_list.filter(is_featured=True)
 
-    # Pagination setup (this part is good)
+    has_featured = Post.objects.filter(is_published=True, is_featured=True).exists()
+
     paginator = Paginator(videos_list, 9)
-    page_number = request.GET.get('page')
-    page_obj = paginator.get_page(page_number)
+    page_obj = paginator.get_page(request.GET.get('page'))
 
     context = {
         'videos': page_obj,
         'categories': categories,
         'active_category': category_slug,
+        'has_featured': has_featured,
     }
     return render(request, 'video_list.html', context)
 
 
+# ------------------------------------------------------------------
+# VIDEO LIST – PARTIAL (HTMX only)
+# ------------------------------------------------------------------
+def video_list_partial(request):
+    if not request.headers.get('HX-Request'):
+        return redirect(f"{reverse('video_list')}?{request.META['QUERY_STRING']}")
+
+    videos_list = Video.objects.select_related('category')\
+                               .filter(is_published=True)\
+                               .order_by('-published_date')
+
+    category_slug = request.GET.get('category')
+    featured = request.GET.get('featured')
+
+    if category_slug:
+        videos_list = videos_list.filter(category__slug=category_slug)
+    if featured:
+        videos_list = videos_list.filter(is_featured=True)
+
+    paginator = Paginator(videos_list, 9)
+    page_obj = paginator.get_page(request.GET.get('page'))
+
+    # RECALCULATE has_featured EVERY TIME
+    has_featured = Video.objects.filter(is_published=True, is_featured=True).exists()
+
+    context = {
+        'videos': page_obj,
+        'categories': VideoCategory.objects.all(),
+        'active_category': category_slug,
+        'has_featured': has_featured,  # <-- ALWAYS FRESH
+    }
+    return render(request, 'partials/video_list_content.html', context)
+
+
+# ------------------------------------------------------------------
+# VIDEO DETAIL
+# ------------------------------------------------------------------
 def video_detail(request, video_slug):
-    """
-    Display a single video in detail.
-    """
-    video = get_object_or_404(Video, slug=video_slug)
-    
-    # Optional: Get related videos from the same category
-    related_videos = Video.objects.filter(category=video.category).exclude(id=video.id)[:3]
+    video = get_object_or_404(Video, slug=video_slug, is_published=True)
+    related_videos = Video.objects.filter(
+        category=video.category, is_published=True
+    ).exclude(id=video.id)[:3]
 
     context = {
         'video': video,
         'related_videos': related_videos,
+        'request': request  # <-- ADD THIS
     }
     return render(request, 'video_detail.html', context)
 
-# Contact form handling via AJAX
+
+# ------------------------------------------------------------------
+# CONTACT FORM (AJAX)
+# ------------------------------------------------------------------
 def contact(request):
     if request.method == 'POST':
         name = request.POST.get('name', '').strip()
@@ -140,27 +223,28 @@ def contact(request):
                 recipient_list=[settings.CONTACT_EMAIL],
                 fail_silently=False,
             )
-
             return JsonResponse({
                 'success': True,
                 'message': 'Your message has been sent successfully.'
             })
-
         except Exception as e:
-            logger.error(f"Error sending contact form email: {str(e)}")
+            logger.error(f"Error sending contact email: {str(e)}")
             return JsonResponse({
                 'success': False,
-                'message': 'There was an error sending your message. Please try again later.'
+                'message': 'Error sending message. Try again later.'
             }, status=500)
 
     return render(request, 'index.html')
 
-# REMOVED: @csrf_exempt decorator. Frontend JavaScript must now send the CSRF token.
+
+# ------------------------------------------------------------------
+# SUBSCRIBE (AJAX)
+# ------------------------------------------------------------------
 def subscribe(request):
     if request.method == 'POST':
         email = request.POST.get('email', '').strip()
         if not email:
-            return JsonResponse({'success': False, 'message': 'Please enter a valid email.'}, status=400)
+            return JsonResponse({'success': False, 'message': 'Valid email required.'}, status=400)
 
         try:
             subscriber, created = Subscriber.objects.get_or_create(email=email)
@@ -172,10 +256,11 @@ def subscribe(request):
                     recipient_list=[email],
                     fail_silently=False,
                 )
-                return JsonResponse({'success': True, 'message': 'Subscription successful! Check your inbox.'})
+                return JsonResponse({'success': True, 'message': 'Subscription successful!'})
             else:
-                return JsonResponse({'success': True, 'message': 'You are already subscribed!'})
+                return JsonResponse({'success': True, 'message': 'Already subscribed!'})
         except Exception as e:
             logger.error(f"Subscription error: {e}")
-            return JsonResponse({'success': False, 'message': 'Error occurred. Try again later.'}, status=500)
+            return JsonResponse({'success': False, 'message': 'Error. Try again.'}, status=500)
+
     return JsonResponse({'message': 'Invalid request'}, status=405)
