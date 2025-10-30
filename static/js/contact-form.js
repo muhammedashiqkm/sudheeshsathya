@@ -1,4 +1,4 @@
-// multi-step-form.js
+// contact-form.js - Complete with Inline Email Validation on "OK"
 
 document.addEventListener('DOMContentLoaded', function () {
     // Form elements
@@ -18,12 +18,16 @@ document.addEventListener('DOMContentLoaded', function () {
     const emailInput = document.getElementById('input-email');
     const messageInput = document.getElementById('input-message');
 
+    // Error element (will be created)
+    let emailError = null;
+
     // Step tracking
     let currentStepIndex = 0;
     const totalSteps = steps.length - 1;
 
     function initForm() {
         updateProgressBar();
+        createEmailErrorElement();
         addEventListeners();
     }
 
@@ -76,6 +80,37 @@ document.addEventListener('DOMContentLoaded', function () {
         return emailRegex.test(email);
     }
 
+    // === CREATE EMAIL ERROR MESSAGE ELEMENT ===
+    function createEmailErrorElement() {
+        const emailStep = document.getElementById('step-email');
+        emailError = document.createElement('div');
+        emailError.className = 'error-message';
+        emailError.style.cssText = `
+            color: var(--danger-color);
+            font-size: 0.85rem;
+            margin-top: 8px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            min-height: 20px;
+            font-style: italic;
+        `;
+        emailStep.querySelector('.message-action').appendChild(emailError);
+    }
+
+    // === SHOW / HIDE ERROR ===
+    function showEmailError(message) {
+        emailError.textContent = message;
+        emailError.style.opacity = '1';
+    }
+
+    function hideEmailError() {
+        emailError.style.opacity = '0';
+        setTimeout(() => {
+            emailError.textContent = '';
+        }, 300);
+    }
+
+    // === SUBMIT FORM ===
     function submitForm() {
         const name = nameInput.value.trim();
         const email = emailInput.value.trim();
@@ -93,105 +128,110 @@ document.addEventListener('DOMContentLoaded', function () {
         formData.append('name', name);
         formData.append('email', email);
         formData.append('message', message);
+        const csrfToken = document.querySelector('[name="csrfmiddlewaretoken"]').value;
+        formData.append('csrfmiddlewaretoken', csrfToken);
 
         fetch('/contact/', {
             method: 'POST',
             body: formData,
         })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    showStep(4);
-                    setTimeout(() => {
-                        showStep(0);
-                        nameInput.value = '';
-                        emailInput.value = '';
-                        messageInput.value = '';
-                        submitBtn.disabled = false;
-                        submitBtn.textContent = 'Submit';
-                    }, 5000);
-                } else {
-                    alert(data.message || 'Submission failed.');
-                    submitBtn.disabled = false;
-                    submitBtn.textContent = 'Submit';
-                }
-            })
-            .catch(error => {
-                console.error('Submission error:', error);
-                alert('An error occurred. Please try again later.');
-                submitBtn.disabled = false;
-                submitBtn.textContent = 'Submit';
-            });
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                showStep(4);
+                setTimeout(() => {
+                    resetForm();
+                }, 4000);
+            } else {
+                alert(data.message || 'Failed to send message.');
+                resetSubmitButton();
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Network error. Please try again.');
+            resetSubmitButton();
+        });
     }
 
+    function resetForm() {
+        showStep(0);
+        nameInput.value = '';
+        emailInput.value = '';
+        messageInput.value = '';
+        hideEmailError();
+        resetSubmitButton();
+    }
+
+    function resetSubmitButton() {
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Submit';
+    }
+
+    // === EVENT LISTENERS ===
     function addEventListeners() {
         startBtn.addEventListener('click', () => showStep(1));
 
         nameNextBtn.addEventListener('click', () => {
-            if (nameInput.value.trim() !== '') nextStep();
-            else nameInput.focus();
-        });
-
-        emailNextBtn.addEventListener('click', () => {
-            if (emailInput.value.trim() && isValidEmail(emailInput.value)) {
+            if (nameInput.value.trim()) {
                 nextStep();
             } else {
-                emailInput.focus();
+                nameInput.focus();
             }
         });
 
-        submitBtn.addEventListener('click', () => {
-            if (messageInput.value.trim() !== '') {
-                submitForm();
-            } else {
-                messageInput.focus();
+        // EMAIL VALIDATION ON "OK" CLICK
+        emailNextBtn.addEventListener('click', () => {
+            const email = emailInput.value.trim();
+
+            if (!email) {
+                showEmailError('Email is required.');
+                emailInput.focus();
+                return;
             }
+            if (!isValidEmail(email)) {
+                showEmailError('Please enter a valid email address.');
+                emailInput.focus();
+                return;
+            }
+
+            hideEmailError();
+            nextStep();
         });
+
+        submitBtn.addEventListener('click', submitForm);
 
         navUp.addEventListener('click', prevStep);
         navDown.addEventListener('click', nextStep);
 
-        // Keyboard navigation
+        // === KEYBOARD NAVIGATION ===
         document.addEventListener('keydown', function (e) {
             if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
                 if (currentStepIndex === 0) startBtn.click();
                 else if (currentStepIndex === 1 && document.activeElement === nameInput) nameNextBtn.click();
                 else if (currentStepIndex === 2 && document.activeElement === emailInput) emailNextBtn.click();
-                e.preventDefault();
             }
 
             if (!['INPUT', 'TEXTAREA'].includes(document.activeElement.tagName)) {
-                if (e.key === 'ArrowUp') {
-                    prevStep();
-                    e.preventDefault();
-                } else if (e.key === 'ArrowDown') {
-                    nextStep();
-                    e.preventDefault();
-                }
+                if (e.key === 'ArrowUp') { prevStep(); e.preventDefault(); }
+                if (e.key === 'ArrowDown') { nextStep(); e.preventDefault(); }
             }
         });
 
         nameInput.addEventListener('keydown', e => {
-            if (e.key === 'Enter') {
-                nameNextBtn.click();
-                e.preventDefault();
-            }
+            if (e.key === 'Enter') { e.preventDefault(); nameNextBtn.click(); }
         });
 
         emailInput.addEventListener('keydown', e => {
-            if (e.key === 'Enter') {
-                emailNextBtn.click();
-                e.preventDefault();
-            }
+            if (e.key === 'Enter') { e.preventDefault(); emailNextBtn.click(); }
         });
 
         messageInput.addEventListener('keydown', e => {
-            if (e.key === 'Enter' && !e.shiftKey) {
-                submitBtn.click();
-                e.preventDefault();
-            }
+            if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); submitBtn.click(); }
         });
     }
 
+    // Initialize
     initForm();
 });

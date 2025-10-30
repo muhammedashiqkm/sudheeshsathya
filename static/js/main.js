@@ -124,40 +124,73 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     // --- Shared Subscription Form Handler ---
-    const handleSubscribe = (formId, messageId) => {
-        const form = document.getElementById(formId);
-        const message = document.getElementById(messageId);
+    // --- Shared Subscription Form Handler with Loading & Validation ---
+const handleSubscribe = (formId, messageId) => {
+    const form = document.getElementById(formId);
+    const message = document.getElementById(messageId);
+    const submitBtn = form.querySelector('button[type="submit"]');
 
-        if (!form) return; // Exit if the form doesn't exist on the page
+    if (!form || !message || !submitBtn) return;
 
-        form.addEventListener('submit', function (e) {
-            e.preventDefault();
-            const email = form.querySelector('input[name="email"]').value;
-            const csrfToken = form.querySelector('input[name="csrfmiddlewaretoken"]').value;
+    form.addEventListener('submit', function (e) {
+        e.preventDefault();
 
-            fetch('/subscribe/', { // Ensure you have this URL in your Django urls.py
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                    'X-CSRFToken': csrfToken,
-                },
-                body: new URLSearchParams({ email })
-            })
-            .then(res => res.json())
-            .then(data => {
-                message.textContent = data.message;
-                message.style.color = data.success ? 'var(--success-color)' : 'var(--danger-color)';
-                if (data.success) form.reset();
-            })
-            .catch(() => {
-                message.textContent = 'An unexpected error occurred. Please try again.';
-                message.style.color = 'var(--danger-color)';
-            });
+        const emailInput = form.querySelector('input[name="email"]');
+        const email = emailInput.value.trim();
+        const csrfToken = form.querySelector('input[name="csrfmiddlewaretoken"]').value;
+
+        // Email validation
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!email) {
+            showMessage('Please enter your email.', false);
+            emailInput.focus();
+            return;
+        }
+        if (!emailRegex.test(email)) {
+            showMessage('Please enter a valid email address.', false);
+            emailInput.focus();
+            return;
+        }
+
+        // Show loading
+        submitBtn.disabled = true;
+        const originalText = submitBtn.textContent;
+        submitBtn.textContent = 'Subscribe...';
+
+        fetch('/subscribe/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'X-CSRFToken': csrfToken,
+            },
+            body: new URLSearchParams({ email })
+        })
+        .then(res => res.json())
+        .then(data => {
+            showMessage(data.message, data.success);
+            if (data.success) {
+                form.reset();
+            }
+        })
+        .catch(() => {
+            showMessage('An error occurred. Please try again.', false);
+        })
+        .finally(() => {
+            submitBtn.disabled = false;
+            submitBtn.textContent = originalText;
         });
-    };
+    });
 
-    // Initialize handlers for both subscription forms
-    handleSubscribe('modal-subscribe-form', 'modal-subscribe-message');
-    handleSubscribe('footer-subscribe-form', 'footer-subscribe-message');
+    function showMessage(text, isSuccess) {
+        message.textContent = text;
+        message.style.color = isSuccess ? 'var(--success-color)' : 'var(--danger-color)';
+        message.style.opacity = '1';
+        setTimeout(() => { message.style.opacity = '0'; }, 4000);
+    }
+};
+
+// Initialize handlers
+handleSubscribe('modal-subscribe-form', 'modal-subscribe-message');
+handleSubscribe('footer-subscribe-form', 'footer-subscribe-message');
 
 });

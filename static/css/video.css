@@ -43,22 +43,6 @@
     transform: scale(0.96);
 }
 
-/* Active filter – stronger glow + pulse */
-.video-filters .btn.primary-btn {
-    box-shadow: 0 0 16px rgba(59, 130, 246, 0.5);
-    position: relative;
-}
-
-.video-filters .btn.primary-btn::after {
-    content: '';
-    position: absolute;
-    top: -3px; left: -3px; right: -3px; bottom: -3px;
-    background: linear-gradient(45deg, #3b82f6, #8b5cf6, #3b82f6);
-    border-radius: inherit;
-    opacity: 0.35;
-    z-index: -1;
-    animation: pulse-glow 2.2s infinite ease-in-out;
-}
 
 @keyframes pulse-glow {
     0%, 100% { opacity: 0.35; transform: scale(1); }
@@ -393,19 +377,13 @@
 
 /* Active/Selected Filter – Toned Down */
 .video-filters .btn.primary-btn {
-    background: #1e3a5f;                    /* Soft dark blue */
+    background: #4f4a4a;
     color: #ffffff;
-    border-color: #3b82f6;
-    box-shadow: 0 0 12px rgba(59, 130, 246, 0.3);
+    border-color: #ffffff;
+    box-shadow: 0 0 12px rgb(186 188 193 / 30%);
     font-weight: 600;
 }
 
-/* Hover on active button – subtle lift */
-.video-filters .btn.primary-btn:hover {
-    background: #2a5d9e;
-    box-shadow: 0 0 16px rgba(59, 130, 246, 0.4);
-    transform: translateY(-1px);
-}
 
 /* Non-active button hover */
 .video-filters .btn.secondary-btn:hover {

@@ -333,6 +333,15 @@ header.hidden {
     transform: scale(1.03);
 }
 
+
+.subscribe-message {
+        opacity: 0;
+        transition: opacity 0.4s ease;
+        margin-top: 8px;
+        font-size: 0.9rem;
+    }
+
+
 /* MODAL STYLES */
 .subscription-modal {
     display: none;

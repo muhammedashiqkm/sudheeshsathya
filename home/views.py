@@ -96,10 +96,7 @@ def blog_detail(request, post_slug):
         slug=post_slug,
         is_published=True
     )
-    context = {
-        'post': post,
-        'request': request  # <-- ADD THIS
-    }
+    context = {'post': post}
     return render(request, 'blog_detail.html', context)
 
 
@@ -195,7 +192,6 @@ def video_detail(request, video_slug):
     context = {
         'video': video,
         'related_videos': related_videos,
-        'request': request  # <-- ADD THIS
     }
     return render(request, 'video_detail.html', context)
 
@@ -258,7 +254,7 @@ def subscribe(request):
                 )
                 return JsonResponse({'success': True, 'message': 'Subscription successful!'})
             else:
-                return JsonResponse({'success': True, 'message': 'Already subscribed!'})
+                return JsonResponse({'success': True, 'message': 'You are already subscribed!'})
         except Exception as e:
             logger.error(f"Subscription error: {e}")
             return JsonResponse({'success': False, 'message': 'Error. Try again.'}, status=500)
