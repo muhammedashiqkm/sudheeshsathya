@@ -49,7 +49,7 @@
         </a>
 
         <div class="post-content">
-            <div class="post-category">{{ post.category.name }}</div>
+            <div class="post-category ">{{ post.category.name }}</div>
             <h3 class="post-title">
                 <a href="{{ detail_url }}?{{ clean_query }}">{{ post.title }}</a>
             </h3>
@@ -119,3 +119,7 @@
 <div class="htmx-indicator text-center mt-4">
     <i class="fas fa-spinner fa-spin"></i> Loading...
 </div>
+
+{% block extra_js %}
+<script src="{% static 'js/pagination.js' %}"></script>
+{% endblock %}

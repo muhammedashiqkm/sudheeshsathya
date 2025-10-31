@@ -116,3 +116,7 @@
 <div class="htmx-indicator text-center mt-4">
     <i class="fas fa-spinner fa-spin"></i> Loading...
 </div>
+
+{% block extra_js %}
+<script src="{% static 'js/pagination.js' %}"></script>
+{% endblock %}

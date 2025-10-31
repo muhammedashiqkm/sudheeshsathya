@@ -335,11 +335,11 @@ header.hidden {
 
 
 .subscribe-message {
-        opacity: 0;
-        transition: opacity 0.4s ease;
-        margin-top: 8px;
-        font-size: 0.9rem;
-    }
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    margin-top: 8px;
+    font-size: 0.9rem;
+}
 
 
 /* MODAL STYLES */
@@ -504,6 +504,10 @@ footer {
    ========================================================================== */
 
 @media screen and (max-width: 768px) {
+    .btn {
+        padding: 9px 21px;
+    }
+
     .navbar {
         padding: 15px 5%;
         flex-wrap: wrap;
@@ -511,14 +515,16 @@ footer {
 
     .logo {
         order: 1;
-        flex-basis: 80%; /* Ensure logo takes up space */
+        flex-basis: 80%;
+        /* Ensure logo takes up space */
         flex-grow: 0;
         text-align: left;
     }
 
     .hamburger {
         order: 2;
-        display: block; /* Show the hamburger icon */
+        display: block;
+        /* Show the hamburger icon */
         flex-basis: 20%;
         text-align: right;
     }
@@ -529,21 +535,60 @@ footer {
         order: 3;
         width: 100%;
         position: fixed;
-        left: -100%; /* Hide off-screen */
-        top: 65px; /* Adjust based on your header height */
+        left: -100%;
+        /* Hide off-screen */
+        top: 65px;
+        /* Adjust based on your header height */
         height: calc(100vh - 65px);
-        background-color: var(--dark-bg);
-        transition: left 0.3s ease-in-out;
+        background-color: #121212e0;
+        transition: left 0.6s ease-in-out;
         z-index: 998;
-        padding: 40px 0;
+        padding: 45px 0;
         text-align: center;
+        border-radius: 38px;
+    }
+
+    .nav-links a::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background-color: #121212e0;
+    transition: width 0.0s ease;
+}
+
+    .nav-links ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .nav-links li {
+        border-bottom: 3px solid rgba(255, 255, 255, 0.1);
+        width: 75%;
+    }
+
+    .nav-links li:last-child {
+        border-bottom: none;
+    }
+
+    .nav-links li a {
+        display: flow;
+        text-decoration: none;
+        color: #ccc;
+        padding-top: 20px;
+        padding-bottom: 45px;
+        padding-left: 30px;
+        padding-right: 30px;
     }
 
     /* We only use one menu for mobile, so hide the right one */
     .nav-links.right {
         display: none;
     }
-    
+
     /* This class is toggled by JavaScript to show the menu */
     .nav-links.left.active {
         left: 0;
@@ -559,23 +604,45 @@ footer {
     .nav-links.left li {
         margin: 20px 0;
     }
-    
+
     .nav-links a {
         font-size: 1.2rem;
     }
 
     .mobile-only {
-        display: block; /* Show mobile-specific links */
+        display: block;
+        /* Show mobile-specific links */
     }
 
     /* Animate hamburger bars to an 'X' */
     .hamburger.active .bar:nth-child(1) {
         transform: translateY(8px) rotate(45deg);
     }
+
     .hamburger.active .bar:nth-child(2) {
         opacity: 0;
     }
+
     .hamburger.active .bar:nth-child(3) {
         transform: translateY(-8px) rotate(-45deg);
     }
+
+    .logo-text {
+        font-size: 0.8rem;
+        font-weight: 500;
+    }
+
+}
+
+@media screen and (max-width: 480px) {
+
+    .btn {
+        padding: 6px 14px;
+    }
+
+    .logo-text {
+        font-size: 0.6rem;
+        font-weight: 400;
+    }
+
 }

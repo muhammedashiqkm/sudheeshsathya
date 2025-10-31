@@ -3,6 +3,126 @@
 * A modern, clean, and professional UI
 */
 
+/* ==========================================================================
+   TONED-DOWN ACTIVE FILTER BUTTON (primary-btn)
+   ========================================================================== */
+
+/* Base button (shared) */
+.video-filters .btn {
+    background: #1a1a1a;
+    color: #ccc;
+    border: 1px solid #333;
+    padding: 10px 20px;
+    border-radius: 50px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    transition: all 0.3s ease;
+}
+
+/* Active/Selected Filter – Toned Down */
+.video-filters .btn.primary-btn {
+    background: #4f4a4a;
+    color: #ffffff;
+    border-color: #ffffff;
+    box-shadow: 0 0 12px rgb(186 188 193 / 30%);
+    font-weight: 600;
+}
+
+/* Hover on active button – subtle lift */
+/* .video-filters .btn.primary-btn:hover {
+    background: #2a5d9e;
+    box-shadow: 0 0 16px rgba(59, 130, 246, 0.4);
+    transform: translateY(-1px); 
+} */
+
+/* Non-active button hover */
+.video-filters .btn.secondary-btn:hover {
+    background: #252525;
+    color: #fff;
+    border-color: #555;
+}
+
+/* Ripple light effect */
+.video-filters .btn::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.7) 0%, transparent 65%);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    opacity: 0;
+    pointer-events: none;
+    z-index: -1;
+    transition: all 0.6s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.video-filters .btn.loading::before {
+    width: 280px;
+    height: 280px;
+    opacity: 1;
+}
+
+/* ==========================================================================
+   HTMX LOADING SPINNER (centered under filters)
+   ========================================================================== */
+
+.htmx-indicator {
+    display: none;
+    text-align: center;
+    margin: 2rem 0;
+    color: #aaa;
+    font-size: 1rem;
+    font-weight: 500;
+}
+
+.htmx-request .htmx-indicator {
+    display: block;
+    animation: fadeIn 0.3s ease-out;
+}
+
+.htmx-indicator i {
+    margin-right: 8px;
+    font-size: 1.1rem;
+    animation: spin 1s linear infinite;
+}
+
+/* Fade-in animation */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Spinner rotation */
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Optional: dim content while loading */
+.htmx-request #blog-list-container,
+.htmx-request #video-list-container {
+    opacity: 0.7;
+    pointer-events: none;
+    transition: opacity 0.2s ease;
+}
+
 /* --- Common Page Layout --- */
 .blog-list-section,
 .blog-detail-section {
@@ -155,6 +275,7 @@
     text-decoration: none;
     transition: color 0.3s ease;
 }
+
 .read-more:hover,
 .category-content .btn:hover {
     color: #ffffff;
@@ -162,7 +283,6 @@
 
 /* --- NEW: Blog Detail Page Layout --- */
 .blog-post {
-    max-width: 800px; /* Focus reading area */
     margin: 0 auto;
     background: transparent;
     padding: 0;
@@ -188,16 +308,16 @@
     color: var(--text-secondary);
 }
 
-.post-featured-image {
+/* .post-featured-image {
     margin-bottom: 40px;
     border-radius: 12px;
     overflow: hidden;
-    box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
 }
 
 .post-featured-image img {
     width: 100%;
-}
+} */
 
 /* --- NEW: Enhanced Post Content Styling --- */
 .post-content {
@@ -206,13 +326,17 @@
     color: var(--text-secondary);
 }
 
-.post-content h2, .post-content h3, .post-content h4 {
+.post-content h2,
+.post-content h3,
+.post-content h4 {
     color: #f0f0f0;
     margin: 40px 0 20px;
     font-weight: 700;
 }
 
-.post-content p, .post-content ul, .post-content ol {
+.post-content p,
+.post-content ul,
+.post-content ol {
     margin-bottom: 25px;
 }
 
@@ -240,10 +364,12 @@
 .post-content figure {
     margin: 40px 0;
 }
+
 .post-content figure img {
     border-radius: 8px;
-    box-shadow: 0 5px 20px rgba(0,0,0,0.4);
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.4);
 }
+
 .post-content figure figcaption {
     text-align: center;
     font-size: 0.9rem;
@@ -296,16 +422,18 @@
     display: flex;
     justify-content: center;
 }
+
 .pagination {
     display: flex;
     list-style: none;
     padding: 0;
     gap: 10px;
 }
+
 .page-item .page-link {
     color: var(--text-secondary);
     padding: 10px 15px;
-    border: 1px solid rgba(255,255,255,0.2);
+    border: 1px solid rgba(255, 255, 255, 0.2);
     border-radius: 8px;
     text-decoration: none;
     transition: all 0.3s ease;
@@ -317,7 +445,7 @@
 }
 
 .page-item.active .page-link {
-    background-color:#696464;
+    background-color: #696464;
     color: #000;
     cursor: default;
 }
@@ -349,166 +477,245 @@
     .page-title {
         font-size: 3.5rem;
     }
-    .blog-list-section, .blog-detail-section {
-        padding: 120px 40px 60px; /* Add side padding */
+
+    .blog-list-section,
+    .blog-detail-section {
+        padding: 120px 40px 60px;
+        /* Add side padding */
     }
 }
 
 /* --- Mobile Devices and Tablets (<= 768px) --- */
 @media (max-width: 768px) {
-    .blog-list-section, .blog-detail-section {
+
+    .blog-list-section,
+    .blog-detail-section {
         padding: 100px 20px 60px;
     }
+
     .page-title {
-        font-size: 3rem;
+        font-size: 2.7rem;
         line-height: 1.2;
+        margin-bottom: 2rem;
     }
+
+
+
     .section-description {
-        margin-bottom: 60px;
+
+        margin: 0 auto 60px;
         font-size: 1rem;
     }
-    .blog-categories-container h2, .recent-posts h2 {
+
+    .blog-categories-container h2,
+    .recent-posts h2 {
         font-size: 2rem;
     }
-    .blog-posts-grid, .blog-categories-grid {
-        grid-template-columns: 1fr; /* Single column on mobile */
+
+    .blog-posts-grid,
+    .blog-categories-grid {
+        grid-template-columns: 1fr;
+        /* Single column on mobile */
         gap: 2rem;
     }
+
     .post-header .post-title {
-        font-size: 2.2rem;
+        font-size: 2rem;
     }
+
     .post-content {
         font-size: 1rem;
         line-height: 1.7;
     }
+
+
+
+    .video-filters .btn {
+        padding: 8px 10px;
+        border-radius: 50px;
+        font-size: 0.8rem;
+        font-weight: 400;
+        letter-spacing: 0.4px;
+    }
+
+    .video-filters {
+        gap: .7rem;
+        margin-bottom: 70px;
+    }
+
+    .post-content h2,
+    .post-content h3,
+    .post-content h4 {
+        margin: 30px 0 20px;
+        font-size: 1.4rem;
+        line-height: 1.2;
+    }
+
+    .post-title a {
+        font-size: 20px;
+    }
+
+    .post-excerpt,
+    .category-content p {
+        font-size: .9rem;
+        line-height: 1.5;
+    }
+
+    .post-content p,
+    .post-content ul,
+    .post-content ol {
+        line-height: 1.6;
+        font-size: 1rem;
+    }
+
+    .post-content figure figcaption {
+        font-size: 0.8rem;
+    }
+
+    .secondary-btn {
+        font-size: 1rem;
+    }
+
+    .container {
+        width: 95%;
+        padding: 0 15px;
+    }
+
+
 }
 
 /* --- Small Mobile Devices (<= 480px) --- */
 @media (max-width: 480px) {
     .page-title {
-        font-size: 2.5rem;
+        font-size: 2rem;
+        margin-bottom: 1.3rem;
     }
+
     .post-header .post-title {
-        font-size: 1.8rem;
+        font-size: 1rem;
     }
+
     .post-meta {
         flex-direction: column;
-        gap: 10px !important;
+        gap: 0px !important;
     }
+
     .post-content blockquote {
         font-size: 1.1rem;
         padding-left: 20px;
     }
+
     .post-tag {
         padding: 6px 14px;
         font-size: 0.8rem;
     }
+
+    .section-description {
+
+        margin: 0 auto 40px;
+        font-size: .9rem;
+    }
+
+    .video-filters {
+        gap: .6rem;
+        margin-bottom: 60px;
+    }
+
+    .video-filters .btn {
+        padding: 6px 7.5px;
+        font-size: 0.6rem;
+    }
+
+    .video-filters .btn.primary-btn {
+        font-weight: 500;
+    }
+
+    .post-category {
+        display: inline-block;
+        padding: 3px 6px;
+        font-size: 0.5rem;
+        font-weight: 600;
+        margin-bottom: 0px;
+    }
+
+    .post-title a {
+        font-size: 15px;
+    }
+
+    .post-meta {
+        font-size: 0.8rem;
+    }
+
+    .post-excerpt,
+    .category-content p {
+        font-size: .9rem;
+        line-height: 18px;
+    }
+
+    .read-more,
+    .category-content .btn {
+        margin-top: 5px;
+    }
+
+    .read-more,
+    .category-content .btn {
+        margin-top: 5px;
+    }
+
+    .post-content a {
+        font-size: .9rem;
+        line-height: 1;
+    }
+
+    .post-content h2,
+    .post-content h3,
+    .post-content h4 {
+        margin: 15px 0 15px;
+        font-weight: 600;
+        line-height: 1.1;
+        font-size: 1rem;
+    }
+
+    .post-content,
+    .category-content {
+        padding: 14px;
+    }
+
+    .page-item .page-link {
+        padding: 8px 12px;
+        font-size: 15px;
+    }
+
+    .post-content p,
+    .post-content ul,
+    .post-content ol {
+        line-height: 1.2;
+        font-size: .8rem;
+    }
+
+    .post-content figure figcaption {
+        line-height: 1.1;
+        font-size: 0.7rem;
+    }
+
+    .secondary-btn {
+        font-size: .8rem;
+    }
+
+    .container {
+        width: 97%;
+        padding: 0 10px;
+    }
+
+    .post-category-name {
+        margin-bottom: 10px;
+    }
+
+    .post-header {
+        margin-bottom: 15px;
+    }
+    .back-to-blog {
+    margin-top: 15px;
 }
 
-/* ==========================================================================
-   TONED-DOWN ACTIVE FILTER BUTTON (primary-btn)
-   ========================================================================== */
-
-/* Base button (shared) */
-.video-filters .btn {
-    background: #1a1a1a;
-    color: #ccc;
-    border: 1px solid #333;
-    padding: 10px 20px;
-    border-radius: 50px;
-    font-size: 0.9rem;
-    font-weight: 500;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    transition: all 0.3s ease;
-}
-
-/* Active/Selected Filter – Toned Down */
-.video-filters .btn.primary-btn {
-    background: #4f4a4a;
-    color: #ffffff;
-    border-color: #ffffff;
-    box-shadow: 0 0 12px rgb(186 188 193 / 30%);
-    font-weight: 600;
-}
-
-/* Hover on active button – subtle lift */
-/* .video-filters .btn.primary-btn:hover {
-    background: #2a5d9e;
-    box-shadow: 0 0 16px rgba(59, 130, 246, 0.4);
-    transform: translateY(-1px); 
-} */
-
-/* Non-active button hover */
-.video-filters .btn.secondary-btn:hover {
-    background: #252525;
-    color: #fff;
-    border-color: #555;
-}
-
-/* Ripple light effect */
-.video-filters .btn::before {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 0;
-    height: 0;
-    background: radial-gradient(circle, rgba(255, 255, 255, 0.7) 0%, transparent 65%);
-    border-radius: 50%;
-    transform: translate(-50%, -50%);
-    opacity: 0;
-    pointer-events: none;
-    z-index: -1;
-    transition: all 0.6s cubic-bezier(0.25, 0.8, 0.25, 1);
-}
-
-.video-filters .btn.loading::before {
-    width: 280px;
-    height: 280px;
-    opacity: 1;
-}
-
-/* ==========================================================================
-   HTMX LOADING SPINNER (centered under filters)
-   ========================================================================== */
-
-.htmx-indicator {
-    display: none;
-    text-align: center;
-    margin: 2rem 0;
-    color: #aaa;
-    font-size: 1rem;
-    font-weight: 500;
-}
-
-.htmx-request .htmx-indicator {
-    display: block;
-    animation: fadeIn 0.3s ease-out;
-}
-
-.htmx-indicator i {
-    margin-right: 8px;
-    font-size: 1.1rem;
-    animation: spin 1s linear infinite;
-}
-
-/* Fade-in animation */
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(-10px); }
-    to   { opacity: 1; transform: translateY(0); }
-}
-
-/* Spinner rotation */
-@keyframes spin {
-    from { transform: rotate(0deg); }
-    to   { transform: rotate(360deg); }
-}
-
-/* Optional: dim content while loading */
-.htmx-request #blog-list-container,
-.htmx-request #video-list-container {
-    opacity: 0.7;
-    pointer-events: none;
-    transition: opacity 0.2s ease;
 }

@@ -103,21 +103,39 @@
     .about-detail-section {
         padding: 100px 20px;
     }
+
     .about-header-1 .main-title {
         font-size: 2.5rem;
     }
+
     .about-content-wrapper {
-        flex-direction: column; /* Stack image and text vertically */
+        flex-direction: column;
+        /* Stack image and text vertically */
         align-items: center;
         text-align: center;
     }
+
     .about-profile-image {
         width: 220px;
         height: 220px;
     }
+
     .greeting-heading {
         font-size: 1.5rem;
     }
+
+    .about-description {
+        font-size: 1rem;
+        text-align: left;
+        line-height: 1.5rem;
+    }
+
+    .about-header-1 {
+
+        margin-bottom: 40px;
+    }
+
+
 }
 
 /* --- Small Mobile Devices (<= 480px) --- */
@@ -125,15 +143,27 @@
     .about-header-1 .main-title {
         font-size: 2rem;
     }
+
     .about-profile-image {
         width: 180px;
         height: 180px;
     }
+
     .greeting-heading {
         font-size: 1.3rem;
     }
+
     .about-description {
         font-size: 0.95rem;
-        text-align: justify;
+        text-align: left;
+    }
+
+    .about-header-1 {
+
+        margin-bottom: 33px;
+    }
+    .about-content-wrapper {
+        flex-direction: row;
+        
     }
 }

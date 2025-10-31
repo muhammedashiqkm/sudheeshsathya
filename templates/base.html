@@ -40,8 +40,8 @@
             <div class="nav-links left" id="leftNavLinks">
                 <ul>
                     <li><a href="{% url 'home' %}#about" class="nav-item">ABOUT</a></li>
-                    <li><a href="{% url 'blog_list' %}" class="nav-item">BLOG</a></li>
-                    <li class="mobile-only"><a href="{% url 'video_list' %}" class="nav-item">VIDEOS</a></li>
+                    <li><a href="{% url 'home' %}#blog" class="nav-item">BLOG</a></li>
+                    <li class="mobile-only"><a href="{% url 'home' %}#videos" class="nav-item">VIDEOS</a></li>
                     <li class="mobile-only"><a href="{% url 'home' %}#contact" class="nav-item">CONTACT</a></li>
                 </ul>
             </div>
@@ -74,6 +74,8 @@
 
     <script src="{% static 'js/main.js' %}"></script>
     <script src="{% static 'js/scroll-to-top.js' %}"></script>
+    
+    
     {% block extra_js %}{% endblock %}
 </body>
 </html>

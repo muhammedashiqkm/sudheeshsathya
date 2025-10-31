@@ -14,19 +14,13 @@
     <div class="container">
         <div class="blog-post">
             <div class="post-header">
-                <div class="post-category">{{ post.category.name }}</div>
+                <div class="post-category-name post-category">{{ post.category.name }}</div>
                 <h1 class="post-title">{{ post.title }}</h1>
                 <div class="post-meta">
                     <span class="post-date">{{ post.published_date|date:"F j, Y" }}</span>
                     <span class="post-author">by Sudeesh Sathya</span>
                 </div>
             </div>
-
-            {% if post.image %}
-            <div class="post-featured-image">
-                <img src="{{ post.image.url }}" alt="{{ post.title }}">
-            </div>
-            {% endif %}
 
             <div class="post-content">
                 {% for block in post.content_blocks.all %}
