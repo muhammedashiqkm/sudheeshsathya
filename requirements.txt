@@ -1,9 +1,8 @@
 django
-celery
-redis
 gunicorn
 python-dotenv
 pillow
 dj-database-url
 django-jazzmin
 whitenoise
+django-background-tasks

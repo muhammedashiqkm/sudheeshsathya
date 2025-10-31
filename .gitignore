@@ -1,1 +1,40 @@
+# .gitignore
+
+# --- Secrets ---
+# CRITICAL: Never commit your environment variables or secrets
 .env
+*.env
+
+# --- Python ---
+# Virtual environment folders
+.venv/
+venv/
+env/
+
+# Cache and compiled files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# --- Django ---
+# Local database file
+db.sqlite3
+db.sqlite3-journal
+
+# User-uploaded files
+media/
+
+# Static files collected by collectstatic
+# (Your app's source static files, e.g., home/static/, should still be in Git)
+staticfiles/
+static_root/
+
+# --- IDE / OS ---
+# IDE configuration
+.vscode/
+.idea/
+
+# OS-generated files
+.DS_Store
+Thumbs.db

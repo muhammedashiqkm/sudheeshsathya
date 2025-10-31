@@ -1,0 +1,42 @@
+# .dockerignore
+
+# --- Git ---
+.git/
+.gitignore
+
+# --- Docker ---
+Dockerfile
+docker-compose.yml
+.dockerignore
+
+# --- Python ---
+# Virtual environment (the container builds its own)
+.venv/
+venv/
+env/
+
+# Cache files (the container will make its own)
+__pycache__/
+*.pyc
+
+# --- Secrets ---
+# These are injected at RUNTIME by docker-compose,
+# do NOT copy them into the build.
+.env
+*.env
+
+# --- Django ---
+# Database (this is mounted as a volume at runtime)
+db.sqlite3
+db.sqlite3-journal
+
+# Media/Static files (these are mounted or generated in the container)
+media/
+staticfiles/
+static_root/
+
+# --- IDE / OS ---
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db

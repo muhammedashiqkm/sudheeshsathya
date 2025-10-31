@@ -1,14 +1,15 @@
 # home/tasks.py
 
-from celery import shared_task
+# 1. Import from background_task, NOT celery
+from background_task import background
 from django.core.mail import EmailMessage
 from django.conf import settings
 from django.urls import reverse
 from django.utils import timezone
 from .models import Post, Video, Subscriber 
 
-# Add retry logic to the task decorator
-@shared_task(autoretry_for=(Exception,), retry_backoff=True)
+# 2. Use the @background decorator
+@background(schedule=1) # Runs 1 second after being called
 def send_post_notification_email_task(post_id):
     """
     Celery task to send notification emails for a newly published post.
@@ -18,7 +19,6 @@ def send_post_notification_email_task(post_id):
     except Post.DoesNotExist:
         return f"Post with id {post_id} not found."
 
-    # Check the flag first to avoid re-sending if a retry happens
     if post.notification_sent_at:
         return f"Notification for post '{post.title}' was already sent."
 
@@ -48,12 +48,12 @@ def send_post_notification_email_task(post_id):
         email.send(fail_silently=False)
         return f"Successfully sent notification for post '{post.title}' to {len(recipient_list)} subscribers."
     except Exception as e:
-        # Re-raise the exception to trigger Celery's retry mechanism
+        # Re-raise the exception to trigger the retry logic
         raise e
 
 
-# Add retry logic to the task decorator
-@shared_task(autoretry_for=(Exception,), retry_backoff=True)
+# 3. Use the @background decorator here too
+@background(schedule=1)
 def send_video_notification_email_task(video_id):
     """
     Celery task to send notification emails for a newly published video.
@@ -63,7 +63,6 @@ def send_video_notification_email_task(video_id):
     except Video.DoesNotExist:
         return f"Video with id {video_id} not found."
 
-    # Check the flag first to avoid re-sending if a retry happens
     if video.notification_sent_at:
         return f"Notification for video '{video.title}' was already sent."
 
@@ -91,11 +90,10 @@ def send_video_notification_email_task(video_id):
             subject=subject, body=message, from_email=from_email, to=['no-reply@yourdomain.com'], bcc=recipient_list
         )
         
-        # --- THE FIX IS HERE ---
+        # This contains the typo fix
         email.send(fail_silently=False)
-        # -----------------------
         
         return f"Successfully sent notification for video '{video.title}' to {len(recipient_list)} subscribers."
     except Exception as e:
-        # Re-raise the exception to trigger Celery's retry mechanism
+        # Re-raise the exception to trigger the retry logic
         raise e

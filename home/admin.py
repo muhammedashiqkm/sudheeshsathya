@@ -4,7 +4,7 @@ from django.contrib import admin
 from .models import PostCategory, Post, ContentBlock, VideoCategory, Video, AboutPage, Subscriber
 from .forms import PostCategoryForm, PostForm, ContentBlockForm, VideoCategoryForm, VideoForm, AboutPageForm
 
-# --- UPDATED: Import the celery tasks ---
+# --- UPDATED: Import the tasks ---
 from .tasks import send_post_notification_email_task, send_video_notification_email_task
 
 # --- Inlines ---
@@ -49,7 +49,6 @@ class PostAdmin(admin.ModelAdmin):
         }),
     )
 
-    # --- NEW: Logic to trigger the Celery task ---
     def save_model(self, request, obj, form, change):
         # 1. Save the object first
         super().save_model(request, obj, form, change)
@@ -61,8 +60,8 @@ class PostAdmin(admin.ModelAdmin):
             obj.is_published and 
             not obj.notification_sent_at):
             
-            # 3. Call the task
-            send_post_notification_email_task.delay(obj.id)
+            # 3. Call the task directly (no .delay())
+            send_post_notification_email_task(obj.id)
 
 @admin.register(VideoCategory)
 class VideoCategoryAdmin(admin.ModelAdmin):
@@ -96,7 +95,6 @@ class VideoAdmin(admin.ModelAdmin):
         }),
     )
 
-    # --- NEW: Logic to trigger the Celery task ---
     def save_model(self, request, obj, form, change):
         # 1. Save the object first
         super().save_model(request, obj, form, change)
@@ -108,8 +106,8 @@ class VideoAdmin(admin.ModelAdmin):
             obj.is_published and 
             not obj.notification_sent_at):
             
-            # 3. Call the task
-            send_video_notification_email_task.delay(obj.id)
+            # 3. Call the task directly (no .delay())
+            send_video_notification_email_task(obj.id)
 
 @admin.register(AboutPage)
 class AboutPageAdmin(admin.ModelAdmin):

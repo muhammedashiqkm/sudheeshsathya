@@ -26,6 +26,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'whitenoise.runserver_nostatic',
     'django.contrib.staticfiles',
+    'background_task',
     'home.apps.HomeConfig',
     
 ]
@@ -67,15 +68,6 @@ DATABASES = {
         conn_max_age=600
     )
 }
-
-# --- Celery Configuration ---
-REDIS_URL = os.environ.get('REDIS_URL', 'redis://localhost:6379/0')
-CELERY_BROKER_URL = REDIS_URL
-CELERY_RESULT_BACKEND = REDIS_URL
-CELERY_ACCEPT_CONTENT = ['json']
-CELERY_TASK_SERIALIZER = 'json'
-CELERY_RESULT_SERIALIZER = 'json'
-CELERY_TIMEZONE = 'Asia/Kolkata'
 
 # --- Site & Contact Configuration ---
 SITE_DOMAIN = os.environ.get('SITE_DOMAIN', 'http://127.0.0.1:8000')
