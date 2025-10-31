@@ -288,7 +288,25 @@
     transform: translateY(-5px);
     box-shadow: 0 5px 15px rgba(233, 226, 228, 0.4);
 }
+/* LinkedIn */
+.social-media-icons .social-icon:hover .fa-linkedin {
+    color: #0A66C2;
+}
 
+/* Instagram */
+.social-media-icons .social-icon:hover .fa-instagram {
+    color: #E4405F;
+}
+
+/* Twitter (X) */
+.social-media-icons .social-icon:hover .fa-twitter {
+    color: #1DA1F2; /* Classic Twitter Blue */
+}
+
+/* YouTube */
+.social-media-icons .social-icon:hover .fa-youtube {
+    color: #FF0000;
+}
 .message-box {
     width: 100%;
     max-width: 600px;
