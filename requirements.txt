@@ -1,7 +1,9 @@
-Django
+django
+celery
+redis
 gunicorn
-Pillow
-psycopg2-binary
-dj-database-url
 python-dotenv
+pillow
+dj-database-url
+django-jazzmin
 whitenoise
