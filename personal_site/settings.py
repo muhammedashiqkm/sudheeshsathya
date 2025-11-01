@@ -21,7 +21,7 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
-    'whitenoise.runserver_nostatic', # For development
+    # 'whitenoise.runserver_nostatic', <-- REMOVED
     'django.contrib.staticfiles',
     'background_task',
     'home.apps.HomeConfig',
@@ -29,12 +29,12 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware', # For production
+    # 'whitenoise.middleware.WhiteNoiseMiddleware', <-- REMOVED
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware',
+    'django.contrib.messages.context_processors.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
@@ -100,9 +100,10 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 USE_TZ = True
 
-# --- Static and Media Files (with WhiteNoise) ---
+# --- Static and Media Files (Configured for PythonAnywhere) ---
 STATIC_URL = '/static/'
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+# This is the default storage backend, which works with the PythonAnywhere static files service.
+STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage' # <-- CHANGED
 # Folder where 'collectstatic' will put all files
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 # Folder where you put your source static files
@@ -125,14 +126,8 @@ DEFAULT_FROM_EMAIL = config('DEFAULT_FROM_EMAIL', default=EMAIL_HOST_USER)
 # --- Default primary key field type ---
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# # --- Production Security Settings ---
-# # On PythonAnywhere, set these to 'True' in your environment variables
-# SECURE_SSL_REDIRECT = config('SECURE_SSL_REDIRECT', default=False, cast=bool)
-# SESSION_COOKIE_SECURE = config('SESSION_COOKIE_SECURE', default=False, cast=bool)
-# CSRF_COOKIE_SECURE = config('CSRF_COOKIE_SECURE', default=False, cast=bool)
-
-# Optional: HSTS (for advanced security)
-# if not DEBUG:
-#     SECURE_HSTS_SECONDS = 31536000 # (1 year)
-#     SECURE_HSTS_INCLUDE_SUBDOMAINS = True
-#     SECURE_HSTS_PRELOAD = True
+# --- Production Security Settings ---
+# On PythonAnywhere, set these to 'True' in your environment variables
+SECURE_SSL_REDIRECT = config('SECURE_SSL_REDIRECT', default=False, cast=bool)
+SESSION_COOKIE_SECURE = config('SESSION_COOKIE_SECURE', default=False, cast=bool)
+CSRF_COOKIE_SECURE = config('CSRF_COOKIE_SECURE', default=False, cast=bool)
