@@ -1,20 +1,17 @@
 # personal_site/settings.py
 
 from pathlib import Path
-import os
+from decouple import config, Csv
 import dj_database_url
-from dotenv import load_dotenv
-
-# Load environment variables from .env file
-load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # --- Core Settings ---
-SECRET_KEY = os.environ.get('SECRET_KEY')
-DEBUG = os.environ.get('DEBUG', 'False').lower() in ('true', '1', 't')
-ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', 'localhost,127.0.0.1').split(',')
+# All these are read from your environment variables
+SECRET_KEY = config('SECRET_KEY')
+DEBUG = config('DEBUG', default=False, cast=bool)
+ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='127.0.0.1,localhost', cast=Csv())
 
 # --- Application Definition ---
 INSTALLED_APPS = [
@@ -24,16 +21,15 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
-    'whitenoise.runserver_nostatic',
+    'whitenoise.runserver_nostatic', # For development
     'django.contrib.staticfiles',
     'background_task',
     'home.apps.HomeConfig',
-    
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware', # For production
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -47,7 +43,7 @@ ROOT_URLCONF = 'personal_site.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates'],
+        'DIRS': [BASE_DIR / 'templates'], # Cleaner path
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -62,16 +58,17 @@ TEMPLATES = [
 WSGI_APPLICATION = 'personal_site.wsgi.application'
 
 # --- Database ---
+# Uses the DATABASE_URL environment variable
 DATABASES = {
     'default': dj_database_url.config(
-        default=os.environ.get('DATABASE_URL'),
+        default=config('DATABASE_URL'),
         conn_max_age=600
     )
 }
 
 # --- Site & Contact Configuration ---
-SITE_DOMAIN = os.environ.get('SITE_DOMAIN', 'http://127.0.0.1:8000')
-CONTACT_EMAIL = os.environ.get('CONTACT_EMAIL')
+SITE_DOMAIN = config('SITE_DOMAIN', default='http://127.0.0.1:8000')
+CONTACT_EMAIL = config('CONTACT_EMAIL', default='')
 
 # --- Jazzmin UI Configuration ---
 JAZZMIN_SETTINGS = {
@@ -103,14 +100,17 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 USE_TZ = True
 
-# --- Static and Media Files ---
+# --- Static and Media Files (with WhiteNoise) ---
 STATIC_URL = '/static/'
-STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+# Folder where 'collectstatic' will put all files
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+# Folder where you put your source static files
+STATICFILES_DIRS = [BASE_DIR / 'static']
 
-MEDIA_ROOT = BASE_DIR / 'media'
+# Folder where user-uploaded files will go
 MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
 
 
 # --- Email Configuration ---
@@ -118,22 +118,21 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
-EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
-DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+EMAIL_HOST_USER = config('EMAIL_HOST_USER', default='')
+EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD', default='')
+DEFAULT_FROM_EMAIL = config('DEFAULT_FROM_EMAIL', default=EMAIL_HOST_USER)
 
 # --- Default primary key field type ---
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# # --- UPDATED: Production Security Settings ---
-# # These are read from the .env file.
-# # In production (DEBUG=False), they should be set to True.
-# SECURE_SSL_REDIRECT = os.environ.get('SECURE_SSL_REDIRECT', 'False').lower() in ('true', '1', 't')
-# SESSION_COOKIE_SECURE = os.environ.get('SESSION_COOKIE_SECURE', 'False').lower() in ('true', '1', 't')
-# CSRF_COOKIE_SECURE = os.environ.get('CSRF_COOKIE_SECURE', 'False').lower() in ('true', '1', 't')
+# --- Production Security Settings ---
+# On PythonAnywhere, set these to 'True' in your environment variables
+SECURE_SSL_REDIRECT = config('SECURE_SSL_REDIRECT', default=False, cast=bool)
+SESSION_COOKIE_SECURE = config('SESSION_COOKIE_SECURE', default=False, cast=bool)
+CSRF_COOKIE_SECURE = config('CSRF_COOKIE_SECURE', default=False, cast=bool)
 
-# # Optional: HSTS (for advanced security)
-# # if not DEBUG:
-# #     SECURE_HSTS_SECONDS = 31536000 # (1 year)
-# #     SECURE_HSTS_INCLUDE_SUBDOMAINS = True
-# #     SECURE_HSTS_PRELOAD = True
+# Optional: HSTS (for advanced security)
+# if not DEBUG:
+#     SECURE_HSTS_SECONDS = 31536000 # (1 year)
+#     SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+#     SECURE_HSTS_PRELOAD = True
