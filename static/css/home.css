@@ -46,6 +46,7 @@
     color: var(--text-secondary);
     animation: fadeInUp 1s ease 0.3s;
     animation-fill-mode: both;
+    font-family: serif;
 }
 
 .cta-buttons {
