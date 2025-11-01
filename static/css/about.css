@@ -69,28 +69,36 @@
 .social-icons a {
     font-size: 1.4rem;
     color: #fff;
+    /* Transition removed from here */
+}
+
+/* This targets all your icons (fa-instagram, fa-twitter, etc.) 
+   and makes their color change smooth. */
+.social-icons a [class*="fa-"] {
     transition: color 0.3s ease;
 }
 
 
-.social-icons a:hover .fa-instagram {
-    color: #E4405F;
+/* --- START OF THE FIX --- */
+/* Apply hover effects ONLY on devices that can hover */
+@media (hover: hover) {
+    .social-icons a:hover .fa-instagram {
+        color: #E4405F;
+    }
+
+    .social-icons a:hover .fa-twitter {
+        color: #1DA1F2;
+    }
+
+    .social-icons a:hover .fa-youtube {
+        color: #FF0000;
+    }
+
+    .social-icons a:hover .fa-linkedin {
+        color: #0A66C2;
+    }
 }
-
-
-.social-icons a:hover .fa-twitter {
-    color: #1DA1F2;
-}
-
-
-.social-icons a:hover .fa-youtube {
-    color: #FF0000;
-}
-
-
-.social-icons a:hover .fa-linkedin {
-    color: #0A66C2;
-}
+/* --- END OF THE FIX --- */
 
 .about-text-box {
     flex: 2 1 500px;
