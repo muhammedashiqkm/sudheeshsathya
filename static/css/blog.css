@@ -44,7 +44,7 @@
     border-color: #555;
 }
 
-/* Ripple light effect */
+/* Ripple light effect
 .video-filters .btn::before {
     content: '';
     position: absolute;
@@ -58,7 +58,7 @@
     pointer-events: none;
     z-index: -1;
     transition: all 0.6s cubic-bezier(0.25, 0.8, 0.25, 1);
-}
+} */
 
 .video-filters .btn.loading::before {
     width: 280px;
