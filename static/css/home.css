@@ -10,9 +10,9 @@
     align-items: center;
     justify-content: center;
     text-align: center;
-    background: url('../images/home.jpeg') no-repeat center center/cover;
+    background: url('../images/1home.jpg') no-repeat center center/cover;
     padding: 0 20px;
-    background-position: 50% 34%;
+    background-position: 50% 90%;
 }
 
 .overlay {
@@ -21,13 +21,13 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.7) 70%, var(--primary-color));
+    background: linear-gradient(to bottom, rgb(0 0 0 / 43%) 79%, var(--primary-color));
 }
 
 .home-content {
     position: relative;
     z-index: 1;
-    max-width: 800px;
+    max-width: 100%;
 }
 
 .home-content h1 {
@@ -36,18 +36,11 @@
     color: #ebebeb;
     letter-spacing: 12px;
     font-family: 'auto';
-    font-size: 8vh;
+    font-size: 9vh;
     font-weight: bold;
 }
 
-.tagline {
-    font-size: 1.5rem;
-    margin-bottom: 30px;
-    color: var(--text-secondary);
-    animation: fadeInUp 1s ease 0.3s;
-    animation-fill-mode: both;
-    font-family: serif;
-}
+
 
 .cta-buttons {
     display: flex;
@@ -282,7 +275,8 @@
     background-color: var(--dark-bg-lighter);
     color: var(--text-primary);
     font-size: 1.5rem;
-    transition: all 0.3s ease; /* This animates the background/transform */
+    transition: all 0.3s ease;
+    /* This animates the background/transform */
 }
 
 /* --- IMPROVEMENT: This makes the icon color change smooth --- */
@@ -297,16 +291,19 @@
         transform: translateY(-5px);
         box-shadow: 0 5px 15px rgba(233, 226, 228, 0.4);
     }
-    
+
     .social-media-icons .social-icon:hover .fa-linkedin {
         color: #0A66C2;
     }
+
     .social-media-icons .social-icon:hover .fa-instagram {
         color: #E4405F;
     }
+
     .social-media-icons .social-icon:hover .fa-twitter {
         color: #1DA1F2;
     }
+
     .social-media-icons .social-icon:hover .fa-youtube {
         color: #FF0000;
     }
@@ -315,19 +312,23 @@
 /* --- FIX 2: For Mobile Tap Feedback --- */
 .social-media-icons .social-icon:active {
     background-color: var(--primary-color);
-    transform: translateY(-5px); /* This gives a nice "pop" on tap */
+    transform: translateY(-5px);
+    /* This gives a nice "pop" on tap */
     box-shadow: 0 5px 15px rgba(233, 226, 228, 0.4);
 }
 
 .social-media-icons .social-icon:active .fa-linkedin {
     color: #0A66C2;
 }
+
 .social-media-icons .social-icon:active .fa-instagram {
     color: #E4405F;
 }
+
 .social-media-icons .social-icon:active .fa-twitter {
     color: #1DA1F2;
 }
+
 .social-media-icons .social-icon:active .fa-youtube {
     color: #FF0000;
 }
@@ -471,6 +472,24 @@
 
 /* --- Tablets (<= 992px) --- */
 @media screen and (max-width: 992px) {
+
+
+
+    .home-content h1 {
+        font-size: 8vh;
+
+    }
+
+    .profile-image,
+    .blog-image,
+    .video-image {
+
+        height: 553px;
+
+    }
+
+
+
     .section-box {
         padding: 45px 40px;
     }
@@ -536,7 +555,7 @@
     }
 
     .home-content h1 {
-        font-size: 2rem;
+        font-size: 3rem;
         letter-spacing: 7PX;
         margin-bottom: 15px;
     }
@@ -629,7 +648,7 @@
         font-size: .8rem;
     }
 
-    #btn-start #btn-email-next  #btn-name-next #btn-submit{
+    #btn-start #btn-email-next #btn-name-next #btn-submit {
         font-size: 0.8rem;
     }
 
@@ -640,18 +659,31 @@
     .footer-subscribe-section h2 {
         font-size: 1.2rem;
     }
+
     .footer-subscribe-section p {
-    font-size: .8rem;
-    
+        font-size: .8rem;
+
+    }
+
+    .key-hint,
+    .textarea-hint {
+        font-size: 0.8rem;
+
+    }
+
+
+
+
 }
-.key-hint, .textarea-hint {
-    font-size: 0.8rem;
-  
-}
 
 
 
+@media screen and (max-width: 650px) {
 
+ .home-content h1 {
+        font-size: 6.5vh;
+
+    }
 }
 
 /* --- Small Mobile Devices (<= 480px) --- */
@@ -772,7 +804,7 @@
         font-size: .7rem;
     }
 
-    #btn-start #btn-email-next  #btn-name-next #btn-submit{
+    #btn-start #btn-email-next #btn-name-next #btn-submit {
         font-size: 0.7rem;
     }
 
@@ -783,34 +815,43 @@
     .footer-subscribe-section h2 {
         font-size: .9rem;
     }
+
     .footer-subscribe-section p {
-    font-size: .7rem;
-    
-}
-.key-hint, .textarea-hint {
-    font-size: 0.7rem;
-  
-}
-.message-form-container {
-    min-height: 260px;
-}
-.form-input {
-    width: 95%;
-    padding: 10px 12px;
-    margin-bottom: 13px;
-}
-.subscribe-input-group input {
-    padding: 9px 15px;
-}
-.subscribe-input-group button {
-    padding: 9px 25px;
-    
-}
-.footer-subscribe-section {
-    padding: 2rem 1rem;
-}
-.copyright-message {
-    font-size: 0.7rem;
-}
+        font-size: .7rem;
+
+    }
+
+    .key-hint,
+    .textarea-hint {
+        font-size: 0.7rem;
+
+    }
+
+    .message-form-container {
+        min-height: 260px;
+    }
+
+    .form-input {
+        width: 95%;
+        padding: 10px 12px;
+        margin-bottom: 13px;
+    }
+
+    .subscribe-input-group input {
+        padding: 9px 15px;
+    }
+
+    .subscribe-input-group button {
+        padding: 9px 25px;
+
+    }
+
+    .footer-subscribe-section {
+        padding: 2rem 1rem;
+    }
+
+    .copyright-message {
+        font-size: 0.7rem;
+    }
 
 }
