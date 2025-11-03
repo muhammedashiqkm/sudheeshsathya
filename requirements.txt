@@ -1,8 +1,7 @@
-django
-gunicorn
-python-dotenv
-pillow
+Django
+python-decouple
 dj-database-url
 django-jazzmin
-whitenoise
 django-background-tasks
+gunicorn
+pillow

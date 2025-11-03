@@ -1,6 +1,3 @@
-# home/tasks.py
-
-# 1. Import from background_task, NOT celery
 from background_task import background
 from django.core.mail import EmailMessage
 from django.conf import settings
@@ -8,11 +5,10 @@ from django.urls import reverse
 from django.utils import timezone
 from .models import Post, Video, Subscriber 
 
-# 2. Use the @background decorator
-@background(schedule=1) # Runs 1 second after being called
+@background(schedule=1)
 def send_post_notification_email_task(post_id):
     """
-    Celery task to send notification emails for a newly published post.
+    Background task to send notification emails for a newly published post.
     """
     try:
         post = Post.objects.get(id=post_id)
@@ -22,11 +18,8 @@ def send_post_notification_email_task(post_id):
     if post.notification_sent_at:
         return f"Notification for post '{post.title}' was already sent."
 
-    post.notification_sent_at = timezone.now()
-    post.save(update_fields=['notification_sent_at'])
-
-    subscribers = Subscriber.objects.filter(is_active=True)
-    recipient_list = [s.email for s in subscribers]
+    subscribers = Subscriber.objects.filter(is_active=True).values_list('email', flat=True)
+    recipient_list = list(subscribers)
 
     if not recipient_list:
         return f"No active subscribers found for post '{post.title}'."
@@ -46,9 +39,12 @@ def send_post_notification_email_task(post_id):
             subject=subject, body=message, from_email=from_email, to=['no-reply@yourdomain.com'], bcc=recipient_list
         )
         email.send(fail_silently=False)
+        
+        post.notification_sent_at = timezone.now()
+        post.save(update_fields=['notification_sent_at'])
+        
         return f"Successfully sent notification for post '{post.title}' to {len(recipient_list)} subscribers."
     except Exception as e:
-        # Re-raise the exception to trigger the retry logic
         raise e
 
 
@@ -56,7 +52,7 @@ def send_post_notification_email_task(post_id):
 @background(schedule=1)
 def send_video_notification_email_task(video_id):
     """
-    Celery task to send notification emails for a newly published video.
+    Background task to send notification emails for a newly published video.
     """
     try:
         video = Video.objects.get(id=video_id)
@@ -66,11 +62,9 @@ def send_video_notification_email_task(video_id):
     if video.notification_sent_at:
         return f"Notification for video '{video.title}' was already sent."
 
-    video.notification_sent_at = timezone.now()
-    video.save(update_fields=['notification_sent_at'])
-
-    subscribers = Subscriber.objects.filter(is_active=True)
-    recipient_list = [s.email for s in subscribers]
+    # OPTIMIZATION: Use .values_list() to get only emails
+    subscribers = Subscriber.objects.filter(is_active=True).values_list('email', flat=True)
+    recipient_list = list(subscribers) # Convert queryset to a list
 
     if not recipient_list:
         return f"No active subscribers found for video '{video.title}'."
@@ -90,10 +84,11 @@ def send_video_notification_email_task(video_id):
             subject=subject, body=message, from_email=from_email, to=['no-reply@yourdomain.com'], bcc=recipient_list
         )
         
-        # This contains the typo fix
         email.send(fail_silently=False)
+
+        video.notification_sent_at = timezone.now()
+        video.save(update_fields=['notification_sent_at'])
         
         return f"Successfully sent notification for video '{video.title}' to {len(recipient_list)} subscribers."
     except Exception as e:
-        # Re-raise the exception to trigger the retry logic
         raise e

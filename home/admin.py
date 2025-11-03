@@ -1,13 +1,9 @@
-# home/admin.py
-
 from django.contrib import admin
+from django.db import transaction
 from .models import PostCategory, Post, ContentBlock, VideoCategory, Video, AboutPage, Subscriber
 from .forms import PostCategoryForm, PostForm, ContentBlockForm, VideoCategoryForm, VideoForm, AboutPageForm
-
-# --- UPDATED: Import the tasks ---
 from .tasks import send_post_notification_email_task, send_video_notification_email_task
 
-# --- Inlines ---
 
 class ContentBlockInline(admin.TabularInline):
     model = ContentBlock
@@ -60,8 +56,10 @@ class PostAdmin(admin.ModelAdmin):
             obj.is_published and 
             not obj.notification_sent_at):
             
-            # 3. Call the task directly (no .delay())
-            send_post_notification_email_task(obj.id)
+            # 3. Call the task ON COMMIT to prevent race condition
+            transaction.on_commit(
+                lambda: send_post_notification_email_task(obj.id)
+            )
 
 @admin.register(VideoCategory)
 class VideoCategoryAdmin(admin.ModelAdmin):
@@ -106,8 +104,10 @@ class VideoAdmin(admin.ModelAdmin):
             obj.is_published and 
             not obj.notification_sent_at):
             
-            # 3. Call the task directly (no .delay())
-            send_video_notification_email_task(obj.id)
+            # 3. Call the task ON COMMIT to prevent race condition
+            transaction.on_commit(
+                lambda: send_video_notification_email_task(obj.id)
+            )
 
 @admin.register(AboutPage)
 class AboutPageAdmin(admin.ModelAdmin):
