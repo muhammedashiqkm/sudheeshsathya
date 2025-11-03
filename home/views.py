@@ -38,7 +38,7 @@ def blog_list(request):
         post_list = post_list.filter(category__slug=category_slug)
     if featured:
         post_list = post_list.filter(is_featured=True)
-    
+
     has_featured = Post.objects.filter(is_published=True, is_featured=True).exists()
 
     paginator = Paginator(post_list, 9)
@@ -236,6 +236,8 @@ def contact(request):
 # ------------------------------------------------------------------
 # SUBSCRIBE (AJAX)
 # ------------------------------------------------------------------
+from django.core.mail import EmailMultiAlternatives
+
 def subscribe(request):
     if request.method == 'POST':
         email = request.POST.get('email', '').strip()
@@ -245,18 +247,45 @@ def subscribe(request):
         try:
             subscriber, created = Subscriber.objects.get_or_create(email=email)
             if created:
-                send_mail(
-                    subject='Subscription Successful!',
-                    message='Thank you for subscribing. You will receive updates on new posts.',
-                    from_email=settings.DEFAULT_FROM_EMAIL,
-                    recipient_list=[email],
-                    fail_silently=False,
+                subject = 'Newsletter Subscription Successful!'
+
+                # Plain text (fallback)
+                text_content = (
+                    "Welcome aboard, friend\n\n"
+                    "In a world that rushes, this is a pause.\n"
+                    "A place to breathe, think, and return to what matters.\n"
+                    "We speak of everything under the sky — but only the things that truly matter.\n"
+                    "I’m glad you’re here — let’s learn to live deliberately.\n\n"
+                    "Every Saturday at 8 PM, a quiet reflection awaits you in your inbox."
                 )
+
+                # HTML version
+                html_content = """
+                <div style="font-family: 'Segoe UI', sans-serif; color: #333; line-height: 1.6;">
+                    <h2>Newsletter Subscription Message</h2>
+                    <p><strong>Welcome aboard, friend</strong></p>
+                    <p>In a world that rushes, this is a pause.<br>
+                    A place to breathe, think, and return to what matters.<br>
+                    We speak of everything under the sky — but only the things that truly matter.<br>
+                    I’m glad you’re here — let’s learn to live deliberately.</p>
+                    <p><strong>Every Saturday at 8 PM</strong>, a quiet reflection awaits you in your inbox.</p>
+                </div>
+                """
+
+                msg = EmailMultiAlternatives(
+                    subject=subject,
+                    body=text_content,
+                    from_email=settings.DEFAULT_FROM_EMAIL,
+                    to=[email],
+                )
+                msg.attach_alternative(html_content, "text/html")
+                msg.send()
+
                 return JsonResponse({'success': True, 'message': 'Subscription successful!'})
             else:
                 return JsonResponse({'success': True, 'message': 'You are already subscribed!'})
         except Exception as e:
             logger.error(f"Subscription error: {e}")
             return JsonResponse({'success': False, 'message': 'Error. Try again.'}, status=500)
-
-    return JsonResponse({'message': 'Invalid request'}, status=405)
+            
+            
