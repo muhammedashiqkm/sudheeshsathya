@@ -8,7 +8,7 @@ import dj_database_url
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # --- Core Settings ---
-SECRET_KEY = config('SECRET_KEY')
+SECRET_KEY = config('SECRET_KEY', default='django-insecure-^k8#p!x9z2w@q5v$m*f7c4b1n%j6t3h+r_y(d-g=s&l0')
 # Set DEBUG=False in your Railway variables!
 DEBUG = config('DEBUG', default=False, cast=bool)
 # Use the Railway variables to pass your domains (e.g., sudheeshsathya.com, your-app.up.railway.app)
@@ -136,7 +136,7 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = config('EMAIL_HOST_USER', default='sudheeshsathya12@gmail.com')
 # Removed hardcoded password. You MUST set this in Railway Variables!
-EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD') 
+EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD', default='put_your_password_here')
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
 # --- Default primary key field type ---
