@@ -8,13 +8,13 @@
 {% endblock %}
 
 {% block content %}
-<section class="blog-list-section video-list-page">
+<section class="blog-list-section video-list-page fade-in-section">
     <div class="container">
-        <h1 class="page-title">My Videos</h1>
-        <p class="section-description">Tutorials, tech talks, and project showcases.</p>
+        <h1 class="page-title fade-in-child">My Videos</h1>
+        <p class="section-description fade-in-child delay-1">Tutorials, tech talks, and project showcases.</p>
 
         <!-- SWAPPABLE CONTENT -->
-        <div id="content-container">
+        <div id="content-container" class="fade-in-child delay-2">
             {% include 'partials/video_list_content.html' %}
         </div>
     </div>

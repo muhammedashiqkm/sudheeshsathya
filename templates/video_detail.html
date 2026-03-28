@@ -11,8 +11,8 @@
 
 {% block content %}
 <section class="blog-detail-section video-detail-page">
-    <div class="container">
-        <div class="video-player-wrapper">
+    <div class="container fade-in-section">
+        <div class="video-player-wrapper fade-in-child">
             <iframe width="100%" height="500" src="{{ video.get_embed_url }}" title="YouTube video player"
                 frameborder="0"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
@@ -20,7 +20,7 @@
             </iframe>
         </div>
 
-        <div class="video-content-area">
+        <div class="video-content-area fade-in-child delay-1">
             <h1 class="video-main-title">{{ video.title }}</h1>
             <div class="video-meta">
                 {% if video.category %}<span>Category: {{ video.category.name }}</span>{% endif %}
@@ -32,7 +32,7 @@
         </div>
 
         <!-- SMART BACK BUTTON -->
-        <div class="back-to-videos">
+        <div class="back-to-videos fade-in-child delay-2">
             <a href="{% url 'video_list' %}?{{ request.META.QUERY_STRING|preserve_query:'scroll_to'|add_query:'scroll_to='|add:video.slug }}"
                class="btn secondary-btn">
                 Back to Videos

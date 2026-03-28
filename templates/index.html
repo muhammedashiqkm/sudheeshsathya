@@ -29,9 +29,9 @@
 
 <section id="about" class="section about-section">
     <div class="container">
-        <div class="section-box about-box">
+        <div class="section-box about-box fade-in-section">
             <div class="about-content">
-                <div class="about-text-container">
+                <div class="about-text-container fade-in-child ">
                     <div class="about-header">
                         <h3 class="about-name">About Me</h3>
                     </div>
@@ -47,7 +47,7 @@
                         <a href="{% url 'about_detail' %}" class="btn primary-btn cta-buttons ">Explore Now</a>
                     </div>
                 </div>
-                <div class="about-image-container">
+                <div class="about-image-container fade-in-child delay-1">
                     <img src="{% static 'images/about.jpeg' %}" alt="Sudeesh Sathya" class="profile-image clickable-image" data-modal-image="{% static 'images/hero-bg.jpg' %}" data-modal-title="Sudeesh Sathya">
                 </div>
             </div>
@@ -57,9 +57,9 @@
 
 <section id="blog" class="section blog-section">
     <div class="container">
-        <div class="section-box blog-box">
+        <div class="section-box blog-box fade-in-section">
             <div class="blog-content">
-                <div class="blog-text-container">
+                <div class="blog-text-container fade-in-child ">
                     <div class="blog-header">
                         <h3 class="blog-name">Blog</h3>
                     </div>
@@ -74,7 +74,7 @@
                         <a href="{% url 'blog_list' %}" class="btn primary-btn cta-buttons ">Explore Now</a>
                     </div>
                 </div>
-                <div class="blog-image-container">
+                <div class="blog-image-container fade-in-child delay-1">
                     <img src="{% static 'images/blog.png' %}" alt="Blog" class="blog-image clickable-image" data-modal-image="{% static 'images/tech-blog.jpg' %}" data-modal-title="My Blog">
                 </div>
             </div>
@@ -84,9 +84,9 @@
 
 <section id="videos" class="section videos-section">
     <div class="container">
-        <div class="section-box video-box">
+        <div class="section-box video-box fade-in-section">
             <div class="video-content">
-                <div class="video-text-container">
+                <div class="video-text-container fade-in-child ">
                     <div class="video-header">
                         <h3 class="video-name">Videos</h3>
                     </div>
@@ -99,7 +99,7 @@
                         <a href="{% url 'video_list' %}" class="btn primary-btn cta-buttons ">Explore Now</a>
                     </div>
                 </div>
-                <div class="video-image-container">
+                <div class="video-image-container fade-in-child delay-1">
                     <img src="{% static 'images/vid.png' %}" alt="Videos" class="video-image clickable-image" data-modal-image="{% static 'images/video-placeholder.jpg' %}" data-modal-title="Video Content Coming Soon">
                 </div>
             </div>
@@ -116,17 +116,17 @@
 <section id="contact" class="section contact-section">
     <div class="container">
 
-            <div class="get-in-touch-content">
-                <h2 class="get-in-touch-heading">Get in Touch</h2>
+            <div class="get-in-touch-content fade-in-section">
+                <h2 class="get-in-touch-heading fade-in-child">Get in Touch</h2>
 
-                <div class="social-media-icons">
+                <div class="social-media-icons fade-in-child delay-1">
                     <a href="https://www.linkedin.com/in/sudheeshsathya/" class="social-icon" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
                     <a href="https://www.instagram.com/sudheesh_sathya?igsh=MWlpaDI1Nm55djluNA==" class="social-icon" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
                     <a href="https://x.com/Sudheeshsathya8" class="social-icon" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
                     <a href="https://www.youtube.com/@sudheeshsathya888" class="social-icon" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
                 </div>
 
-                <div class="message-box">
+                <div class="message-box fade-in-child delay-2">
                     <div class="progress-container">
                         <div class="progress-bar" id="form-progress-bar"></div>
                     </div>
@@ -136,6 +136,9 @@
                     </div>
 
                     <div class="message-form-container">
+
+                    
+                        
                         <div class="message-step active" id="step-intro">
                             <div class="message-question">
                                 <h3>Want to send me a message?</h3>
@@ -212,14 +215,14 @@
 
 
 
-<section class="footer-subscribe-section">
-    <h2>Epiphanies - Sudheesh Sathya</h2>
-    <p>
+<section class="footer-subscribe-section fade-in-section">
+    <h2 class="fade-in-child">Epiphanies - Sudheesh Sathya</h2>
+    <p class="fade-in-child delay-1">
         Bite-sized insights and perspective for those who think differently<br>
         Every saturday evening
 
     </p>
-    <form id="footer-subscribe-form" method="post">
+    <form id="footer-subscribe-form" method="post" class="fade-in-child delay-2">
         {% csrf_token %}
         <div class="subscribe-input-group">
             <input type="email" name="email" placeholder="Your email address" required />

@@ -138,18 +138,21 @@
 .blog-image-container,
 .video-image-container {
     position: relative;
-    transform: rotate(3.5deg);
-    transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
-.section-box:hover .about-image-container,
+/* This class will add a 200ms delay to any animation */
+.fade-in-section.delay-1 {
+    transition-delay: 0.2s;
+}
+
+/* .section-box:hover .about-image-container,
 .section-box:hover .blog-image-container,
 .section-box:hover .video-image-container {
     transform: rotate(0deg);
-}
+} */
 
 .profile-image,
 .blog-image,
@@ -345,6 +348,8 @@
     position: relative;
 }
 
+
+
 .progress-container {
     width: 100%;
     height: 3px;
@@ -465,6 +470,20 @@
     background-color: var(--primary-color);
     color: white;
 }
+
+
+
+/* --- 3. Remove old tilt effect (Ensure this is done) --- */
+.about-image-container,
+.blog-image-container,
+.video-image-container {
+    /* Make sure 'transform: rotate' and 'transition' are NOT here */
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+/* You should have already deleted the :hover rule, which is correct! */
 
 /* ==========================================================================
    Responsive Styles for Home Page

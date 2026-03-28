@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Page Not Found</title>
+    <style>
+        /* --- Basic Reset & Font --- */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: #000000; 
+            color: #ffffff;
+            
+            /* --- Flexbox Centering --- */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            text-align: center;
+            padding: 1rem;
+        }
+
+        /* --- Content Container --- */
+        .container {
+            /* This makes it responsive: */
+            max-width: 500px; /* Won't get wider than 500px */
+            width: 100%;     /* Will shrink to fit smaller screens */
+        }
+
+        /* --- Typography --- */
+        h1 {
+            font-size: 2.5rem; 
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+        }
+
+        p {
+            font-size: 1rem;
+            color: #a0a0a0; 
+            margin-bottom: 2rem;
+        }
+
+        /* --- "Back to Home" Button --- */
+        .home-button {
+            display: inline-block;
+            background-color: #ffffff;
+            color: #000000;
+            padding: 0.8rem 1.75rem;
+            border: none;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            transition: background-color 0.2s ease;
+        }
+
+        .home-button:hover {
+            background-color: #e0e0e0; 
+        }
+
+        /* --- NEW: Responsive Adjustments --- */
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 1.75rem; /* Make title smaller on small screens */
+            }
+
+            p {
+                font-size: 0.9rem; /* Make subtitle smaller */
+                margin-bottom: 1.5rem;
+            }
+            
+            .home-button {
+                padding: 0.75rem 1.5rem;
+                font-size: 0.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Page Not Found</h1>
+        <p>The page you are looking for doesn't exist or has been moved.</p>
+        
+        <a href="{% url 'home' %}" class="home-button">Back To Home</a>
+    </div>
+
+</body>
+</html>

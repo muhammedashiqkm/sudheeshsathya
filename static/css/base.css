@@ -499,6 +499,54 @@ footer {
 }
 
 
+
+/* --- 1. Parent Box Animation (FASTER) --- */
+.fade-in-section {
+    opacity: 0;
+    transform: translateY(50px);
+    /* The box animation - CHANGED from 0.7s to 0.6s */
+    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+}
+
+.fade-in-section.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* --- 2. Children Content Animation (FASTER) --- */
+
+/* By default, all children are hidden and moved down */
+.fade-in-child {
+    opacity: 0;
+    transform: translateY(30px);
+    /* The animation for the children - CHANGED from 0.7s to 0.6s */
+    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+}
+
+/* When the parent (.is-visible) is visible,
+   trigger the animation for the children.
+*/
+
+/* Child 1 (Text) - CHANGED delay from 0.3s to 0.1s */
+.fade-in-section.is-visible .fade-in-child {
+    opacity: 1;
+    transform: translateY(0);
+    /* Start Child 1 (text) 100ms after the parent starts */
+    transition-delay: 0.1s;
+}
+
+/* Child 2 (Image) - CHANGED delay from 0.5s to 0.2s */
+.fade-in-section.is-visible .fade-in-child.delay-1 {
+    /* Start Child 2 (image) 200ms after the parent starts */
+    transition-delay: 0.2s;
+}
+
+/* Child 3 (Message Box) - CHANGED delay from 0.7s to 0.3s */
+.fade-in-section.is-visible .fade-in-child.delay-2 {
+    /* Start Child 3 300ms after the parent starts */
+    transition-delay: 0.3s;
+}
+
 /* ==========================================================================
    ADDED: Responsive Navigation Styles
    ========================================================================== */
