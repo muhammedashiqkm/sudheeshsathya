@@ -9,10 +9,11 @@ import dj_database_url
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # --- Core Settings ---
-# All these are read from your environment variables
-SECRET_KEY = config('SECRET_KEY', default='your-default-secret-key')
+SECRET_KEY = config('SECRET_KEY', default='django-insecure-^k8#p!x9z2w@q5v$m*f7c4b1n%j6t3h+r_y(d-g=s&l0')
 DEBUG = config('DEBUG', default=False, cast=bool)
-ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='sudheeshsathya.com,www.sudheeshsathya.com,webapp-2820076.pythonanywhere.com', cast=Csv())
+
+# Updated to include your custom domains
+ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='sudheeshsathya.com,www.sudheeshsathya.com,web-production-668f18.up.railway.app', cast=Csv())
 
 # --- Application Definition ---
 INSTALLED_APPS = [
@@ -22,7 +23,7 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
-    # 'whitenoise.runserver_nostatic', <-- REMOVED
+    'whitenoise.runserver_nostatic', # Restored for static files
     'django.contrib.staticfiles',
     'background_task',
     'home.apps.HomeConfig',
@@ -30,7 +31,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    # 'whitenoise.middleware.WhiteNoiseMiddleware', <-- REMOVED
+    'whitenoise.middleware.WhiteNoiseMiddleware', # Restored: Must be below SecurityMiddleware
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -44,7 +45,7 @@ ROOT_URLCONF = 'personal_site.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates'], # Cleaner path
+        'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -59,17 +60,16 @@ TEMPLATES = [
 WSGI_APPLICATION = 'personal_site.wsgi.application'
 
 # --- Database ---
-# Uses the DATABASE_URL environment variable
 DATABASES = {
     'default': dj_database_url.config(
-        default=config('DATABASE_URL',default='postgresql://postgres:ESpTAlLJhaxdCYjICqhUlJmMcbgJrjAF@metro.proxy.rlwy.net:58342/railway'),
+        default=config('DATABASE_URL'),
         conn_max_age=600
     )
 }
 
-# --- Site & Contact Configuration ---
-SITE_DOMAIN = config('SITE_DOMAIN', default='http://127.0.0.1:8000')
-CONTACT_EMAIL = config('CONTACT_EMAIL', default='')
+# --- Site Configuration ---
+SITE_DOMAIN = config('SITE_DOMAIN', default='https://sudheeshsathya.com')
+CSRF_TRUSTED_ORIGINS = config('CSRF_TRUSTED_ORIGINS', default='https://sudheeshsathya.com,https://www.sudheeshsathya.com', cast=Csv())
 
 # --- Jazzmin UI Configuration ---
 JAZZMIN_SETTINGS = {
@@ -80,59 +80,38 @@ JAZZMIN_SETTINGS = {
     "search_model": "home.Post",
     "show_sidebar": True,
     "navigation_expanded": True,
-    "changeform_format": "horizontal_tabs",
-    "changeform_format_overrides": {
-        "auth.user": "collapsible",
-        "auth.group": "vertical_tabs",
-    },
 }
 
-# --- Password validation ---
-AUTH_PASSWORD_VALIDATORS = [
-    {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
-    {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator'},
-    {'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator'},
-    {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator'},
-]
-
-# --- Internationalization ---
-LANGUAGE_CODE = 'en-us'
-TIME_ZONE = 'UTC'
-USE_I18N = True
-USE_TZ = True
-
-# --- Static and Media Files (Configured for PythonAnywhere) ---
+# --- Static and Media Files ---
 STATIC_URL = '/static/'
-# This is the default storage backend, which works with the PythonAnywhere static files service.
-STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage' # <-- CHANGED
-# Folder where 'collectstatic' will put all files
 STATIC_ROOT = BASE_DIR / 'staticfiles'
-# Folder where you put your source static files
 STATICFILES_DIRS = [BASE_DIR / 'static']
+
+# Using WhiteNoise for efficient static file serving
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-# Add this to help Django find the folder in the Railway container
+# Ensure media directory exists for Railway Volume
 if not os.path.exists(MEDIA_ROOT):
     os.makedirs(MEDIA_ROOT)
-
 
 # --- Email Configuration ---
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'sudheeshsathya12@gmail.com'
-EMAIL_HOST_PASSWORD = 'dfkqxvuomguwcnjr'
+EMAIL_HOST_USER = config('EMAIL_HOST_USER', default='sudheeshsathya12@gmail.com')
+EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD', default='dfkqxvuomguwcnjr')
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
-
-# --- Default primary key field type ---
-DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
 # --- Production Security Settings ---
-# On PythonAnywhere, set these to 'True' in your environment variables
+# CRITICAL: This line fixes the "Too Many Redirects" error on Railway
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
 SECURE_SSL_REDIRECT = config('SECURE_SSL_REDIRECT', default=False, cast=bool)
 SESSION_COOKIE_SECURE = config('SESSION_COOKIE_SECURE', default=False, cast=bool)
 CSRF_COOKIE_SECURE = config('CSRF_COOKIE_SECURE', default=False, cast=bool)
+
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
