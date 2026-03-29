@@ -1,14 +1,12 @@
-# personal_site/urls.py
-
-from django.contrib import admin
-from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
+from django.contrib import admin
+from django.urls import path, include
 
 urlpatterns = [
-    path('django_admin/', admin.site.urls),
-    path('', include('home.urls')), 
+    path('admin/', admin.site.urls),
+    path('', include('home.urls')), # Change 'home' to your main app name
 ]
 
-if settings.DEBUG:
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+# This line allows Django to serve images in production
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
