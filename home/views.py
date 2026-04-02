@@ -1,7 +1,7 @@
 # home/views.py
 
 from django.shortcuts import render, get_object_or_404, redirect
-from django.core.mail import send_mail
+from django.core.mail import send_mail, EmailMultiAlternatives
 from django.conf import settings
 from django.http import JsonResponse
 from django.urls import reverse
@@ -11,8 +11,75 @@ from .models import (
     Video, VideoCategory
 )
 import logging
+from background_task import background # <-- Imported background tasks
 
 logger = logging.getLogger(__name__)
+
+# ==================================================================
+# BACKGROUND TASKS (Handles email sending asynchronously)
+# ==================================================================
+
+@background(schedule=1) # Runs 1 second after being called
+def async_send_contact_email(name, email, message, from_email, contact_email):
+    """Handles sending the contact form email in the background."""
+    try:
+        send_mail(
+            subject=f'New Contact Form Submission from {name}',
+            message=f"Name: {name}\nEmail: {email}\n\nMessage:\n{message}",
+            from_email=from_email,
+            recipient_list=[contact_email],
+            fail_silently=False,
+        )
+        logger.info(f"Background task: Contact email sent successfully for {name}.")
+    except Exception as e:
+        logger.error(f"Background task error sending contact email: {str(e)}")
+
+
+@background(schedule=1)
+def async_send_subscription_email(user_email, from_email):
+    """Handles sending the welcome email in the background."""
+    subject = 'Newsletter Subscription Successful!'
+
+    # Plain text (fallback)
+    text_content = (
+        "Welcome aboard, friend\n\n"
+        "In a world that rushes, this is a pause.\n"
+        "A place to breathe, think, and return to what matters.\n"
+        "We speak of everything under the sky — but only the things that truly matter.\n"
+        "I’m glad you’re here — let’s learn to live deliberately.\n\n"
+        "Every Saturday at 8 PM, a quiet reflection awaits you in your inbox."
+    )
+
+    # HTML version
+    html_content = """
+    <div style="font-family: 'Segoe UI', sans-serif; color: #333; line-height: 1.6;">
+        <h2>Newsletter Subscription Message</h2>
+        <p><strong>Welcome aboard, friend</strong></p>
+        <p>In a world that rushes, this is a pause.<br>
+        A place to breathe, think, and return to what matters.<br>
+        We speak of everything under the sky — but only the things that truly matter.<br>
+        I’m glad you’re here — let’s learn to live deliberately.</p>
+        <p><strong>Every Saturday at 8 PM</strong>, a quiet reflection awaits you in your inbox.</p>
+    </div>
+    """
+
+    try:
+        msg = EmailMultiAlternatives(
+            subject=subject,
+            body=text_content,
+            from_email=from_email,
+            to=[user_email],
+        )
+        msg.attach_alternative(html_content, "text/html")
+        msg.send()
+        logger.info(f"Background task: Subscription email sent to {user_email}.")
+    except Exception as e:
+        logger.error(f"Background task error sending subscription email: {e}")
+
+
+# ==================================================================
+# VIEWS
+# ==================================================================
 
 # ------------------------------------------------------------------
 # HOME
@@ -211,24 +278,19 @@ def contact(request):
                 'message': 'Please fill in all required fields.'
             }, status=400)
 
-        try:
-            send_mail(
-                subject=f'New Contact Form Submission from {name}',
-                message=f"Name: {name}\nEmail: {email}\n\nMessage:\n{message}",
-                from_email=settings.DEFAULT_FROM_EMAIL,
-                recipient_list=[settings.CONTACT_EMAIL],
-                fail_silently=False,
-            )
-            return JsonResponse({
-                'success': True,
-                'message': 'Your message has been sent successfully.'
-            })
-        except Exception as e:
-            logger.error(f"Error sending contact email: {str(e)}")
-            return JsonResponse({
-                'success': False,
-                'message': 'Error sending message. Try again later.'
-            }, status=500)
+        # Call the background task instead of sending synchronously!
+        async_send_contact_email(
+            name, 
+            email, 
+            message, 
+            settings.DEFAULT_FROM_EMAIL, 
+            settings.CONTACT_EMAIL
+        )
+        
+        return JsonResponse({
+            'success': True,
+            'message': 'Your message has been queued for sending!'
+        })
 
     return render(request, 'index.html')
 
@@ -236,8 +298,6 @@ def contact(request):
 # ------------------------------------------------------------------
 # SUBSCRIBE (AJAX)
 # ------------------------------------------------------------------
-from django.core.mail import EmailMultiAlternatives
-
 def subscribe(request):
     if request.method == 'POST':
         email = request.POST.get('email', '').strip()
@@ -247,45 +307,12 @@ def subscribe(request):
         try:
             subscriber, created = Subscriber.objects.get_or_create(email=email)
             if created:
-                subject = 'Newsletter Subscription Successful!'
-
-                # Plain text (fallback)
-                text_content = (
-                    "Welcome aboard, friend\n\n"
-                    "In a world that rushes, this is a pause.\n"
-                    "A place to breathe, think, and return to what matters.\n"
-                    "We speak of everything under the sky — but only the things that truly matter.\n"
-                    "I’m glad you’re here — let’s learn to live deliberately.\n\n"
-                    "Every Saturday at 8 PM, a quiet reflection awaits you in your inbox."
-                )
-
-                # HTML version
-                html_content = """
-                <div style="font-family: 'Segoe UI', sans-serif; color: #333; line-height: 1.6;">
-                    <h2>Newsletter Subscription Message</h2>
-                    <p><strong>Welcome aboard, friend</strong></p>
-                    <p>In a world that rushes, this is a pause.<br>
-                    A place to breathe, think, and return to what matters.<br>
-                    We speak of everything under the sky — but only the things that truly matter.<br>
-                    I’m glad you’re here — let’s learn to live deliberately.</p>
-                    <p><strong>Every Saturday at 8 PM</strong>, a quiet reflection awaits you in your inbox.</p>
-                </div>
-                """
-
-                msg = EmailMultiAlternatives(
-                    subject=subject,
-                    body=text_content,
-                    from_email=settings.DEFAULT_FROM_EMAIL,
-                    to=[email],
-                )
-                msg.attach_alternative(html_content, "text/html")
-                msg.send()
-
+                # Call the background task!
+                async_send_subscription_email(email, settings.DEFAULT_FROM_EMAIL)
                 return JsonResponse({'success': True, 'message': 'Subscription successful!'})
             else:
                 return JsonResponse({'success': True, 'message': 'You are already subscribed!'})
+                
         except Exception as e:
             logger.error(f"Subscription error: {e}")
-            return JsonResponse({'success': False, 'message': 'Error. Try again.'}, status=500)
-            
-            
+            return JsonResponse({'success': False, 'message': 'Error processing subscription. Try again.'}, status=500)

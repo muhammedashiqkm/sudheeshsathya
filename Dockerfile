@@ -25,8 +25,6 @@ COPY . /app/
 RUN mkdir -p /app/media
 
 # --- THE FIX: DUMMY VARIABLES FOR BUILD ---
-# collectstatic requires Django settings to load, but Railway's real env vars 
-# aren't injected until the container runs. We provide dummy values to bypass the decouple errors.
 ENV SECRET_KEY="dummy-key-for-build-only"
 ENV ALLOWED_HOSTS="*"
 ENV CSRF_TRUSTED_ORIGINS="http://localhost"
@@ -37,5 +35,5 @@ ENV EMAIL_HOST_PASSWORD="dummy"
 # Collect static files for WhiteNoise
 RUN python manage.py collectstatic --noinput
 
-# Run database migrations and start Gunicorn
-CMD python manage.py migrate && gunicorn personal_site.wsgi:application --bind 0.0.0.0:$PORT
+# Run migrations, start the background worker in the background (&), then start Gunicorn
+CMD python manage.py migrate && python manage.py process_tasks & gunicorn personal_site.wsgi:application --bind 0.0.0.0:$PORT
