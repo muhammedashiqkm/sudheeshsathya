@@ -24,6 +24,16 @@ COPY . /app/
 # Create the folder where Railway will mount your Persistent Volume
 RUN mkdir -p /app/media
 
+# --- THE FIX: DUMMY VARIABLES FOR BUILD ---
+# collectstatic requires Django settings to load, but Railway's real env vars 
+# aren't injected until the container runs. We provide dummy values to bypass the decouple errors.
+ENV SECRET_KEY="dummy-key-for-build-only"
+ENV ALLOWED_HOSTS="*"
+ENV CSRF_TRUSTED_ORIGINS="http://localhost"
+ENV DATABASE_URL="sqlite:///:memory:"
+ENV EMAIL_HOST_USER="dummy@example.com"
+ENV EMAIL_HOST_PASSWORD="dummy"
+
 # Collect static files for WhiteNoise
 RUN python manage.py collectstatic --noinput
 
