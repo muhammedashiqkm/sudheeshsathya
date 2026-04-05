@@ -1,94 +1,74 @@
+# home/tasks.py
+import resend
+import logging
 from background_task import background
-from django.core.mail import EmailMessage
 from django.conf import settings
 from django.urls import reverse
 from django.utils import timezone
 from .models import Post, Video, Subscriber 
 
+logger = logging.getLogger(__name__)
+
 @background(schedule=1)
 def send_post_notification_email_task(post_id):
-    """
-    Background task to send notification emails for a newly published post.
-    """
+    """Broadcasts a new post alert to all active subscribers via Resend API."""
+    resend.api_key = settings.RESEND_API_KEY
     try:
         post = Post.objects.get(id=post_id)
-    except Post.DoesNotExist:
-        return f"Post with id {post_id} not found."
+        if post.notification_sent_at:
+            return f"Notification for '{post.title}' already sent."
 
-    if post.notification_sent_at:
-        return f"Notification for post '{post.title}' was already sent."
+        # Fetch active subscribers
+        recipient_list = list(Subscriber.objects.filter(is_active=True).values_list('email', flat=True))
 
-    subscribers = Subscriber.objects.filter(is_active=True).values_list('email', flat=True)
-    recipient_list = list(subscribers)
+        if not recipient_list:
+            return "No active subscribers found."
 
-    if not recipient_list:
-        return f"No active subscribers found for post '{post.title}'."
-
-    subject = f"New Blog Post: {post.title}"
-    post_url = f"{settings.SITE_DOMAIN}{reverse('blog_detail', args=[post.slug])}"
-    
-    message = (
-        f"Hi there!\n\nA new post \"{post.title}\" has been published.\n\n"
-        f"Read it here: {post_url}\n\n"
-        f"Read the excerpt:\n{post.excerpt}\n\nStay tuned!"
-    )
-    from_email = settings.DEFAULT_FROM_EMAIL
-
-    try:
-        email = EmailMessage(
-            subject=subject, body=message, from_email=from_email, to=['no-reply@yourdomain.com'], bcc=recipient_list
-        )
-        email.send(fail_silently=False)
+        post_url = f"{settings.SITE_DOMAIN}{reverse('blog_detail', args=[post.slug])}"
         
+        # Use Resend API directly to bypass Railway's port blocks
+        resend.Emails.send({
+            "from": settings.DEFAULT_FROM_EMAIL,
+            "to": recipient_list,
+            "subject": f"New Blog Post: {post.title}",
+            "html": f"<h3>{post.title}</h3><p>{post.excerpt}</p><a href='{post_url}'>Read More</a>"
+        })
+
         post.notification_sent_at = timezone.now()
         post.save(update_fields=['notification_sent_at'])
-        
-        return f"Successfully sent notification for post '{post.title}' to {len(recipient_list)} subscribers."
+        logger.info(f"Broadcasted post {post_id} to {len(recipient_list)} users.")
+
     except Exception as e:
+        logger.error(f"Error in post notification: {e}")
         raise e
 
-
-# 3. Use the @background decorator here too
 @background(schedule=1)
 def send_video_notification_email_task(video_id):
-    """
-    Background task to send notification emails for a newly published video.
-    """
+    """Broadcasts a new video alert to all active subscribers via Resend API."""
+    resend.api_key = settings.RESEND_API_KEY
     try:
         video = Video.objects.get(id=video_id)
-    except Video.DoesNotExist:
-        return f"Video with id {video_id} not found."
+        if video.notification_sent_at:
+            return f"Notification for '{video.title}' already sent."
 
-    if video.notification_sent_at:
-        return f"Notification for video '{video.title}' was already sent."
+        recipient_list = list(Subscriber.objects.filter(is_active=True).values_list('email', flat=True))
 
-    # OPTIMIZATION: Use .values_list() to get only emails
-    subscribers = Subscriber.objects.filter(is_active=True).values_list('email', flat=True)
-    recipient_list = list(subscribers) # Convert queryset to a list
+        if not recipient_list:
+            return "No active subscribers found."
 
-    if not recipient_list:
-        return f"No active subscribers found for video '{video.title}'."
-
-    subject = f"New Video Published: {video.title}"
-    video_url = f"{settings.SITE_DOMAIN}{reverse('video_detail', args=[video.slug])}"
-    
-    message = (
-        f"Hi there!\n\nA new video \"{video.title}\" has been published.\n\n"
-        f"Watch it here: {video_url}\n\n"
-        f"About the video:\n{video.excerpt}\n\nStay tuned!"
-    )
-    from_email = settings.DEFAULT_FROM_EMAIL
-
-    try:
-        email = EmailMessage(
-            subject=subject, body=message, from_email=from_email, to=['no-reply@yourdomain.com'], bcc=recipient_list
-        )
+        video_url = f"{settings.SITE_DOMAIN}{reverse('video_detail', args=[video.slug])}"
         
-        email.send(fail_silently=False)
+        resend.Emails.send({
+            "from": settings.DEFAULT_FROM_EMAIL,
+            "to": recipient_list,
+            "subject": f"New Video: {video.title}",
+            "html": f"<h3>{video.title}</h3><p>{video.excerpt}</p><a href='{video_url}'>Watch Now</a>"
+        })
 
         video.notification_sent_at = timezone.now()
         video.save(update_fields=['notification_sent_at'])
-        
-        return f"Successfully sent notification for video '{video.title}' to {len(recipient_list)} subscribers."
+        logger.info(f"Broadcasted video {video_id} to {len(recipient_list)} users.")
+
     except Exception as e:
+        logger.error(f"Error in video notification: {e}")
         raise e
