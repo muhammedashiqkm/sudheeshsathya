@@ -31,6 +31,7 @@ ENV CSRF_TRUSTED_ORIGINS="http://localhost"
 ENV DATABASE_URL="sqlite:///:memory:"
 ENV EMAIL_HOST_USER="dummy@example.com"
 ENV EMAIL_HOST_PASSWORD="dummy"
+ENV RESEND_API_KEY="dummy_key_for_build"
 
 # Collect static files for WhiteNoise
 RUN python manage.py collectstatic --noinput

@@ -7,3 +7,4 @@ python-decouple
 django-jazzmin
 django-background-tasks
 pillow
+resend

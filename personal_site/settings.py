@@ -21,7 +21,7 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
-    'whitenoise.runserver_nostatic', # Required for WhiteNoise in development
+    'whitenoise.runserver_nostatic',
     'django.contrib.staticfiles',
     'background_task',
     'home.apps.HomeConfig',
@@ -29,7 +29,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware', # Serves static files
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -87,21 +87,16 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 STATICFILES_DIRS = [BASE_DIR / 'static']
-# Compress and cache static files for production performance
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage' 
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # Media File Configuration (Points to Railway Volume Mount Path)
 MEDIA_URL = '/media/'
-MEDIA_ROOT = config('MEDIA_MOUNT_PATH', default=BASE_DIR / 'media') 
+MEDIA_ROOT = config('MEDIA_MOUNT_PATH', default=BASE_DIR / 'media')
 
-# --- Email Configuration ---
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_PORT = 465
-EMAIL_USE_TLS = True
-EMAIL_HOST_USER = config('EMAIL_HOST_USER')
-EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
-DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+# --- Email Configuration (Resend API — works on Railway Hobby) ---
+EMAIL_BACKEND = 'home.resend_backend.ResendEmailBackend'
+RESEND_API_KEY = config('RESEND_API_KEY')
+DEFAULT_FROM_EMAIL = config('DEFAULT_FROM_EMAIL', default='onboarding@resend.dev')
 
 # --- Default primary key field type ---
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
@@ -151,25 +146,21 @@ LOGGING = {
         },
     },
     'loggers': {
-        # Default Django logger
         'django': {
             'handlers': ['console'],
             'level': config('DJANGO_LOG_LEVEL', default='INFO'),
             'propagate': False,
         },
-        # Specifically captures 4xx and 5xx errors
         'django.request': {
             'handlers': ['console'],
-            'level': 'WARNING', 
+            'level': 'WARNING',
             'propagate': False,
         },
-        # Custom logger for your 'home' app
         'home': {
             'handlers': ['console'],
             'level': 'INFO',
             'propagate': False,
         },
-        # Custom logger for background tasks
         'background_task': {
             'handlers': ['console'],
             'level': 'INFO',
