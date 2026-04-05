@@ -33,6 +33,7 @@ def async_send_contact_email(name, email, message, from_email, contact_email):
         logger.info(f"Background task: Contact email sent successfully for {name}.")
     except Exception as e:
         logger.error(f"Background task error sending contact email: {str(e)}")
+        raise e  # <-- FIX: Tells the worker the task failed so it retries later
 
 
 @background(schedule=1)
@@ -75,6 +76,7 @@ def async_send_subscription_email(user_email, from_email):
         logger.info(f"Background task: Subscription email sent to {user_email}.")
     except Exception as e:
         logger.error(f"Background task error sending subscription email: {e}")
+        raise e  # <-- FIX: Tells the worker the task failed so it retries later
 
 
 # ==================================================================
