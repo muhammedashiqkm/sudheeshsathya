@@ -36,4 +36,5 @@ ENV EMAIL_HOST_PASSWORD="dummy"
 RUN python manage.py collectstatic --noinput
 
 # Run migrations, start the background worker in the background (&), then start Gunicorn
-CMD python manage.py migrate && gunicorn personal_site.wsgi:application --bind 0.0.0.0:$PORT
+# Replace your final CMD line with this exact line:
+CMD python manage.py migrate && python manage.py process_tasks & gunicorn personal_site.wsgi:application --bind 0.0.0.0:$PORT
