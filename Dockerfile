@@ -21,8 +21,8 @@ RUN pip install -r requirements.txt
 # Copy your entire Django project into the /app folder
 COPY . /app/
 
-# Create the folder where Railway will mount your Persistent Volume
-RUN mkdir -p /app/media
+# Create media directory and set permissions
+RUN mkdir -p /app/media && chmod 755 /app/media
 
 # --- THE FIX: DUMMY VARIABLES FOR BUILD ---
 ENV SECRET_KEY="dummy-key-for-build-only"
