@@ -79,7 +79,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 # --- Internationalization ---
 LANGUAGE_CODE = 'en-us'
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Kolkata'
 USE_I18N = True
 USE_TZ = True
 
@@ -96,7 +96,7 @@ MEDIA_ROOT = config('MEDIA_MOUNT_PATH', default=BASE_DIR / 'media')
 # --- Email Configuration (Resend API — works on Railway Hobby) ---
 EMAIL_BACKEND = 'home.resend_backend.ResendEmailBackend'
 RESEND_API_KEY = config('RESEND_API_KEY')
-DEFAULT_FROM_EMAIL = config('DEFAULT_FROM_EMAIL', default='onboarding@resend.dev')
+DEFAULT_FROM_EMAIL = config('DEFAULT_FROM_EMAIL', default='hello@sudheeshsathya.com')
 
 # --- Default primary key field type ---
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
